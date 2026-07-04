@@ -1,0 +1,19 @@
+.btn.mybtn-color {
+    background-color: #00B207;
+    color: white;
+    border: none;
+
+}
+
+.btn.mybtn-color:hover {
+    background-color: #16ad1b;
+
+
+}
+
+.btn.mybtn-color-hover:active {
+    background-color: #086e0c;
+    color: white;
+
+
+}

@@ -1,0 +1,121 @@
+.profiedropdown {
+    outline: none;
+    border: none;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+}
+
+.profiedropdown option:first-child {
+    display: none;
+}
+
+/* Responsive Header Containers */
+.top-header-container {
+    background-color: #FFFFFF;
+}
+
+.logo-img {
+    height: 38px;
+    object-fit: contain;
+}
+
+/* Search Wrapper & Styles */
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.search-input {
+    border: 1px solid #E6E6E6;
+    height: 42px;
+    font-size: 14px;
+    outline: none;
+    padding-right: 90px; /* space for the search button */
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.search-input:focus {
+    border-color: #00B207;
+    box-shadow: 0 0 0 2px rgba(0, 178, 7, 0.1);
+}
+
+.search-icon-left {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #4D4D4D;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.search-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    background-color: #00B207;
+    color: #FFFFFF;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    background-color: #009906;
+}
+
+/* Spacing and Visibility adjustments */
+.devider-img {
+    height: 24px;
+    opacity: 0.5;
+}
+
+.user-name-text {
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cart-title {
+    font-size: 11px;
+    color: #808080;
+}
+
+.cart-price {
+    font-size: 13px;
+    color: #1A1A1A;
+}
+
+/* Media Queries for fine-tuning */
+@media (max-width: 767.98px) {
+    .search-wrapper {
+        max-width: 100%;
+    }
+    .user-name-text {
+        display: none; /* Hide username on very small screens to make room for profile select */
+    }
+}
+
+@media (min-width: 768px) {
+    .search-wrapper {
+        width: 100%;
+        max-width: 400px;
+    }
+}
+
+@media (min-width: 992px) {
+    .search-wrapper {
+        max-width: 500px;
+    }
+}

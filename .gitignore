@@ -1,0 +1,28 @@
+# Admin Panel
+admin-panel/node_modules/
+admin-panel/dist/
+admin-panel/build/
+admin-panel/.env
+
+# User Frontend
+newproject/node_modules/
+newproject/dist/
+newproject/build/
+newproject/.env
+
+# Backend
+express/node_modules/
+express/.env
+
+# Uploads (optional)
+express/uploads/
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+
+# OS Files
+.DS_Store
+Thumbs.db

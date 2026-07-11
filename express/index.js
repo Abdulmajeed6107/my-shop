@@ -15,6 +15,8 @@ import adminRoutes from './routes/adminRoutes.js'
 import http from "http";
 import { Server } from "socket.io";
 import colorRoutes from './routes/colorRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
+
 
 app.use(express.json());
 
@@ -66,7 +68,7 @@ app.use('/api/removeFromCart', cartRoutes);
 
 app.use('/api/orders', orderRoutes);
 
-app.use('/api', orderRoutes);
+app.use('/api', orderRoutes); 
 
 
 app.use('/api/update/', userRoutes);
@@ -85,6 +87,9 @@ app.use('/api', adminRoutes);
 app.use('/api/orders', adminRoutes);
 
 app.use('/api/users', adminRoutes);
+
+app.use('/api/dashboard', dashboardRoutes);
+
 
 
 

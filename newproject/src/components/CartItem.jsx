@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LocationMap from "./LocationMap";
 
+
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -18,8 +19,6 @@ const Cart = () => {
         localStorage.setItem("userLocation", JSON.stringify(location));
     };
 
-    // const baseURL = "http://localhost:3000";
-    // Get user_id with fallback
     const savedUser = localStorage.getItem("user");
     const user_id = savedUser ? JSON.parse(savedUser).id : null;
 
@@ -38,7 +37,7 @@ const Cart = () => {
     const fetchCartItems = async () => {
         try {
             console.log(`📡 Fetching cart for user: ${user_id}`);
-            const res = await axios.get(`http://localhost:3000/api/cartitems/${user_id}`);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/cartitems/${user_id}`);
 
             console.log("📦 API Response:", res.data);
             console.log("🖼️ First item image value:", res.data.cart?.[0]?.image);
@@ -63,7 +62,7 @@ const Cart = () => {
         try {
             console.log("Deleting:", id);
             await axios.delete(
-                `http://localhost:3000/api/removeFromCart/${id}`
+                `${import.meta.env.VITE_API_URL}/api/removeFromCart/${id}`
             )
                 .then(res => console.log(res.data))
                 .catch(err => console.log(err));
@@ -105,10 +104,10 @@ const Cart = () => {
                         <div className="flex gap-6">
                             <img src={item.image} alt={item.name} className="w-24 h-24 object-cover"
                                 style={{
-                                    width: '126px',
-                                    height: '126px',
-                                    objectFit: 'cover',
-                                    minWidth: '96px'  // prevents stretching
+                                    width: '156px',
+                                    height: '326px',
+                                    // objectFit: 'cover',
+                                    // minWidth: '96px'  // prevents stretching
                                 }}
                             />
                             <div>

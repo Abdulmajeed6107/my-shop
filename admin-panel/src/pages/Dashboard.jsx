@@ -1,16 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import DashboardStats from './Dashbaordstats';
+import AdminLogin from "./AdminLogin";
 
-const socket = io("http://localhost:3000");
+const socket = io(`${import.meta.env.VITE_API_URL}`);
 
 function Dashboard() {
     const navigate = useNavigate();
     const [notifications, setNotifications] = useState([]);
 
-    // 👇 fetch recent pending orders on mount (in case you missed them)
+    const [admin, setAdmin] = useState(null);
+
     useEffect(() => {
-        fetch("http://localhost:3000/api/orders/recent")
+        const storedUser = localStorage.getItem("user");
+        const token = localStorage.getItem("token");
+
+        if (!storedUser || !token) {
+            navigate("/admin/login");
+            return;
+        }
+
+        const user = JSON.parse(storedUser);
+
+        if (user.role !== "admin") {
+            alert("Access denied. Admins only.");
+            navigate("/");
+            return;
+        }
+
+        setAdmin(user);
+    }, [navigate]);
+
+    // fetch recent pending orders on mount (in case you missed them)
+    useEffect(() => {
+
+        fetch(`${import.meta.env.VITE_API_URL}/api/orders/recent`)
             .then(r => r.json())
             .then(data => {
                 console.log("recent orders:", data); // check this in console first
@@ -43,6 +68,15 @@ function Dashboard() {
     return (
         <div className="ps-5 mt-5">
             <h1>Admin Dashboard</h1>
+            <div className="mb-3 d-flex align-items-center justify-content-center gap-3">
+                <button onClick={() => {
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("token");
+                    navigate("/");
+                }}>
+                    Logout
+                </button>
+            </div>
 
             {/* Notifications */}
             {notifications.length > 0 && (
@@ -73,10 +107,11 @@ function Dashboard() {
                 </div>
             )}
 
-            <div className="d-flex gap-3 mt-3">
+            <div className="d-flex gap-3 mt-3 mb-5">
                 <button onClick={() => navigate('/Products')}>Products</button>
                 <button onClick={() => navigate('/orders')}>Orders</button>
                 <button onClick={() => navigate('/users')}>Users</button>
+                <button onClick={() => navigate('/dashboardstats')}>Stats</button>
             </div>
         </div>
     );

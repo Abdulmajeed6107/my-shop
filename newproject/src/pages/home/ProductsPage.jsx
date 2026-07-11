@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import MyNavbar from '../../components/Navbarcustom';
 import TopHeader from '../../components/TopHeader';
 import { useSearchParams } from "react-router-dom";
+import BootomPage from '../../components/BootomPage';
 import './Products.css';
 
 function ProductsPage() {
@@ -21,7 +22,7 @@ function ProductsPage() {
 
   const getItems = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/products");
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
       if (!response.ok) throw new Error('Api fetch error');
       const data = await response.json();
       if (data && data.status === false) throw new Error(data.message || 'API error');
@@ -99,7 +100,7 @@ function ProductsPage() {
               </p>
             ) : (
               filteredProducts.map((item) => (
-                <div className="col-6 col-md-4 col-lg-3" key={item.id}>
+                <div className="col-6 col-md-4 col-lg-3 mb-5" key={item.id}>
                   <div
                     className="card h-100  shadow-sm border-0"
                     style={{ cursor: 'pointer', transition: 'transform 0.2s ease, box-shadow 0.2s ease' }}
@@ -163,6 +164,9 @@ function ProductsPage() {
           </div>
         </div>
       )}
+      <BootomPage />
+      
+
     </>
   );
 }

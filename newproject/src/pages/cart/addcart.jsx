@@ -7,14 +7,14 @@ const AddToCart = () => {
     const navigate = useNavigate();
     const [product, setProduct] = useState(location.state?.product || null);
     const [isLoading, setIsLoading] = useState(!location.state?.product);
-    const baseUrl = "http://localhost:3000";
+    const baseUrl = import.meta.env.VITE_API_URL; // Use environment variable for base URL
 
     useEffect(() => {
         if (!product) {
             // Fetch product if not available in state (e.g., page reload)
             const fetchProduct = async () => {
                 try {
-                    const response = await fetch('http://localhost:3000/api/products/' + id);
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
                     const data = await response.json();
                     if (data && data.product) {
                         setProduct(data.product);

@@ -23,7 +23,7 @@ export default function ProductDetail({ productId }) {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:3000/api/products/${id}/colors`)
+      fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}/colors`)
         .then(r => r.json())
         .then(setProductColors)
         .catch(err => console.log("colors error", err));

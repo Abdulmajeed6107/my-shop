@@ -8,7 +8,7 @@ export default function ColorManager({ productId }) {
 
   // Fetch all master colors (dropdown)
   const fetchAllColors = async () => {
-    const res = await fetch("http://localhost:3000/api/colors");
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/colors`);
     const data = await res.json();
     console.log("TYPE:", typeof data);      // 👈 add this
   console.log("IS ARRAY:", Array.isArray(data)); // 👈 add this
@@ -18,7 +18,7 @@ export default function ColorManager({ productId }) {
 
   // Fetch this product's assigned colors
   const fetchProductColors = async () => {
-    const res = await fetch(`http://localhost:3000/api/products/${productId}/colors`);
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${productId}/colors`);
     const data = await res.json();
     setProductColors(data);
   };
@@ -32,7 +32,7 @@ export default function ColorManager({ productId }) {
   const addColor = async () => {
     if (!form.color_id) return alert("Please select a color");
     setLoading(true);
-    await fetch(`http://localhost:3000/api/products/${productId}/colors`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/products/${productId}/colors`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)
@@ -45,7 +45,7 @@ export default function ColorManager({ productId }) {
   // Remove color from product
   const removeColor = async (colorId) => {
     if (!confirm("Remove this color?")) return;
-    await fetch(`http://localhost:3000/api/products/${productId}/colors/${colorId}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/products/${productId}/colors/${colorId}`, {
       method: "DELETE"
     });
     await fetchProductColors();

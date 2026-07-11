@@ -9,8 +9,9 @@ const DashboardStats = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch('http://localhost:3000/')
-        setStats(res.data);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/dashboard/stats/`);
+        const data = await res.json();
+        setStats(data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -25,35 +26,39 @@ const DashboardStats = () => {
   const { stats: s, recentOrders = [], lowStock = [] } = stats || {};
 
   const statCards = [
-    { 
-      title: "Total Revenue", 
-      value: `$${Number(s?.totalRevenue || 0).toLocaleString()}`, 
-      icon: DollarSign, 
-      color: "bg-green-500" 
+    {
+      title: "Total Revenue",
+      value: `${Number(s?.totalRevenue || 0).toLocaleString()}`,
+      icon: DollarSign,
+      color: "bg-green-500"
     },
-    { 
-      title: "Total Orders", 
-      value: s?.totalOrders || 0, 
-      icon: ShoppingCart, 
-      color: "bg-blue-500" 
+    {
+      title: "Total Orders",
+      value: s?.totalOrders || 0,
+      icon: ShoppingCart,
+      color: "bg-blue-500"
     },
-    { 
-      title: "Total Users", 
-      value: s?.totalUsers || 0, 
-      icon: Users, 
-      color: "bg-purple-500" 
+    {
+      title: "Total Users",
+      value: s?.totalUsers || 0,
+      icon: Users,
+      color: "bg-purple-500"
     },
-    { 
-      title: "Total Products", 
-      value: s?.totalProducts || 0, 
-      icon: Package, 
-      color: "bg-orange-500" 
+    {
+      title: "Total Products",
+      value: s?.totalProducts || 0,
+      icon: Package,
+      color: "bg-orange-500"
     },
   ];
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen text-center">
+
       <div className="mb-8">
+        <button className="btn btn-secondary mb-3 mt-3" onClick={() => window.location.href = '/dashboard'}>
+          Back to Dashboard
+        </button>
         <h1 className="text-3xl font-bold text-gray-800">Dashboard Overview</h1>
         <p className="text-gray-500">Welcome back! Here's what's happening today.</p>
       </div>
@@ -82,7 +87,7 @@ const DashboardStats = () => {
           <div className="space-y-4">
             {recentOrders.length > 0 ? (
               recentOrders.map((order) => (
-                <div key={order.id} className="flex justify-between items-center border-b pb-4 last:border-0">
+                <div key={order.id} className="card flex justify-between items-center border-b pb-4 last:border-0">
                   <div>
                     <p className="font-medium">Order #{order.id}</p>
                     <p className="text-sm text-gray-500">{order.userName || 'Customer'}</p>

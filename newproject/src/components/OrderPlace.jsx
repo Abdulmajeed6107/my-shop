@@ -8,7 +8,7 @@ export const placeOrder = async (cartItems, total, payment) => {
         color_name: i.color_name
     })));
 
-    const response = await fetch('http://localhost:3000/api/orders/place-order', {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/place-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

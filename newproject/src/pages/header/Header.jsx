@@ -16,17 +16,17 @@ export default function Header() {
                 <div className="row g-4">
 
                     {/* Big Banner Column */}
-                    <div className="col-lg-7 col-12">
-                        <div className="hero-card position-relative h-75">
-                            {/* Background Image */}
-                            <img
+                    {/* <div className="col-lg-7 col-12"> */}
+                    {/* <div className="hero-card position-relative h-75"> */}
+                    {/* Background Image */}
+                    {/* <img
                                 src="./images/Bannar Big.png"
-                                alt="Fresh & Healthy Organic Food Banner"
+                                alt="Fabric and fashion banner"
                                 className='float-end'
-                            />
+                            /> */}
 
-                            {/* Overlay Text Content */}
-                            <div className="banner-overlay glass-content-card ps-4 ps-sm-5 pe-3 py-4">
+                    {/* Overlay Text Content */}
+                    {/* <div className="banner-overlay glass-content-card ps-4 ps-sm-5 pe-3 py-4">
                                 <h1 className="main-banner-title mb-2 mb-md-3">
                                     Fabric & Fashion <br />
                                     House
@@ -35,9 +35,9 @@ export default function Header() {
                                 <div className="d-flex gap-4 mb-3">
                                     <span className="sale-text fs-5 fw-semibold d-none d-sm-inline">Sale up to</span>
                                     <span className="offcolor-badge sale-badge-container rounded">30% OFF</span>
-                                </div>
+                                </div> */}
 
-                                <p className="banner-description fs-6 mb-4 d-none d-md-block">
+                    {/* <p className="banner-description fs-6 mb-4 d-none d-md-block">
                                     Free shipping on all your orders.
                                 </p>
 
@@ -48,11 +48,54 @@ export default function Header() {
                                     >
                                         Shop Now
                                         <i className="bi bi-arrow-right fs-5"></i>
-                                    </button>
+                                    </button> */}
+                    {/* </div>
+                            </div>
+                        </div>
+                    </div> */}
+                    <div className="col-lg-7 col-12">
+                        <div className="hero-card position-relative h-75">
+                            {/* Background Image Layer */}
+                            <div className="banner-image-wrapper">
+                                <img
+                                    src="./images/Bannar Big.png"
+                                    alt="Fabric and fashion banner"
+                                    className='float-end image-fade-target'
+                                />
+                            </div>
+
+                            {/* Independent Structural Overlay Layer */}
+                            <div className="banner-overlay">
+                                {/* The actual styling container for text/buttons */}
+                                <div className="glass-content-card ps-4 ps-sm-5 pe-3 py-4">
+                                    <h1 className="main-banner-title mb-2 mb-md-3">
+                                        Fabric & Fashion <br />
+                                        House
+                                    </h1>
+
+                                    <div className="d-flex gap-4 mb-3">
+                                        <span className="sale-text fs-5 fw-semibold d-none d-sm-inline">Sale up to</span>
+                                        <span className="offcolor-badge sale-badge-container rounded">30% OFF</span>
+                                    </div>
+
+                                    <p className="banner-description fs-6 mb-4 d-none d-md-block">
+                                        Free shipping on all your orders.
+                                    </p>
+
+                                    <div>
+                                        <button
+                                            className="btn-shop-now-premium btn btn-shop-now rounded-pill px-4 py-2 px-md-5 py-md-3 d-inline-flex align-items-center gap-2"
+                                            onClick={() => navigate('/products')}
+                                        >
+                                            Shop Now
+                                            <i className="bi bi-arrow-right fs-5"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                     {/* Small Promotional Banners Column */}
                     <div className="col-lg-4 col-12 d-flex flex-column gap-4">

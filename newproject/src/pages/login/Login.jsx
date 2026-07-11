@@ -18,7 +18,7 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:3000/api/user/login', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/login`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"

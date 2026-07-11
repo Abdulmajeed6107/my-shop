@@ -7,7 +7,7 @@ router.post('/place-order', placeOrder);
 router.get('/orders/recent', RecentOrders);
 router.get('/orders/:id', GetOrder);
 router.get('/orders/:id/status', UpdateOrder);
-
+router.put('/orders/:id/status', UpdateOrder);
 
 
 export default router;

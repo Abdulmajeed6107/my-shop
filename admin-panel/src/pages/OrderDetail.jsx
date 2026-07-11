@@ -10,7 +10,7 @@ export default function OrderDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/orders/${id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}`)
       .then(r => r.json())
       .then(data => {
         setOrder(data.order);
@@ -20,12 +20,22 @@ export default function OrderDetail() {
   }, [id]);
 
   const updateStatus = async (status) => {
-    await fetch(`http://localhost:3000/api/orders/${id}/status`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status })
-    });
-    setOrder(prev => ({ ...prev, status }));
+      console.log("Dropdown changed, new status:", status); // 👈 add this
+
+    const prevStatus = order.status;
+    setOrder(prev => ({ ...prev, status })); // optimistic update
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status })
+      });
+      if (!res.ok) throw new Error("Failed to update status");
+    } catch (err) {
+      alert("Could not update status. Please try again.");
+      setOrder(prev => ({ ...prev, status: prevStatus })); // rollback
+    }
   };
 
   if (loading) return <div className="text-center mt-5">Loading...</div>;
@@ -44,7 +54,7 @@ export default function OrderDetail() {
           <p><strong>Customer:</strong> {order?.user_name}</p>
           <p><strong>Email:</strong> {order?.email}</p>
           <p><strong>Date:</strong> {new Date(order?.created_at).toLocaleString()}</p>
-          <p><strong>Total:</strong> {order?.total} Rs.</p>
+          <p><strong>Total:</strong> {order?.final_amount} Rs.</p>
 
           {/* Status updater */}
           <div className="d-flex align-items-center gap-2">
@@ -81,8 +91,12 @@ export default function OrderDetail() {
           {items.map(item => (
             <tr key={item.id}>
               <td>
-                <img src={item.image} width={50} height={50}
-                  style={{ objectFit: "cover" }} />
+                <img
+                  src={`http://localhost:3000/uploads/${item.image}`}
+                  width={150}
+                  height={150}
+                  style={{ objectFit: "cover" }}
+                />
               </td>
               <td>{item.name}</td>
               <td>

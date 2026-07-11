@@ -73,7 +73,7 @@ const TopHeader = () => {
                         <img
                             src="/images/Logo.png"
                             alt="logo"
-                            className="img-fluid logo-img"
+                            className="logo-img rounded-5"
                         />
                     </Link>
                 </div>

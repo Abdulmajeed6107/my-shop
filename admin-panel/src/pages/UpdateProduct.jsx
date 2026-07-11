@@ -22,7 +22,7 @@ const UpdateProduct = () => {
     useEffect(() => {
         const getData = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/products/${id}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
 
                 console.log("STATUS:", response.status);
                 console.log("CONTENT TYPE:", response.headers.get("content-type"));
@@ -65,7 +65,7 @@ const UpdateProduct = () => {
         }
 
         const response = await fetch(
-            `http://localhost:3000/api/products/${id}`,
+            `${import.meta.env.VITE_API_URL}/api/products/${id}`,
             {
                 method: "PUT",
                 body: formData,

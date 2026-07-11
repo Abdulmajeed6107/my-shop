@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import Dashboard from "./pages/Dashboard";
 import AddProduct from "./pages/AddProduct";
 import Products from "./pages/Products";
@@ -9,74 +9,51 @@ import AdminSignup from "./pages/AdminSignup";
 import UpdateProduct from "./pages/UpdateProduct";
 import { Orders } from "./pages/Orders";
 import GetUsers from "./pages/Users";
-import DashboardStats from "./pages/Dashbaordstats"; 
+import DashboardStats from "./pages/Dashbaordstats";
 import OrderDetail from "./pages/OrderDetail";
 
 function App() {
-
   return (
     <BrowserRouter>
+      <Routes>
 
+        <Route path="/" element={<AdminLogin />} />
+        <Route path="/admin/register" element={<AdminSignup />} />
 
-<Routes>
+        <Route path="/dashboard" element={
+          <ProtectedAdminRoute><Dashboard /></ProtectedAdminRoute>
+        } />
 
-<Route 
-path="/"
-element={<AdminLogin/>}
-/>
+        <Route path="/add-product" element={
+          <ProtectedAdminRoute><AddProduct /></ProtectedAdminRoute>
+        } />
 
-<Route 
-path="/admin/register"
-element={<AdminSignup/>}
-/>
+        <Route path="/products" element={
+          <ProtectedAdminRoute><Products /></ProtectedAdminRoute>
+        } />
 
-<Route
-path="/dashboard"
-element={<Dashboard/>}
-/>
+        <Route path="/update-product/:id" element={
+          <ProtectedAdminRoute><UpdateProduct /></ProtectedAdminRoute>
+        } />
 
+        <Route path="/orders" element={
+          <ProtectedAdminRoute><Orders /></ProtectedAdminRoute>
+        } />
 
-<Route
-path="/add-product"
-element={<AddProduct/>}
-/>
+        <Route path="/users" element={
+          <ProtectedAdminRoute><GetUsers /></ProtectedAdminRoute>
+        } />
 
+        <Route path="/dashboardstats" element={
+          <ProtectedAdminRoute><DashboardStats /></ProtectedAdminRoute>
+        } />
 
-<Route
-path="/products"
-element={<Products/>}
-/>
+        <Route path="/orders/:id" element={
+          <ProtectedAdminRoute><OrderDetail /></ProtectedAdminRoute>
+        } />
 
-<Route
-path="/update-product/:id"
-element={<UpdateProduct/>}
-/>
-
-<Route
-path="/orders"
-element={<Orders/>}
-/>
-
-<Route
-path="/users"
-element={<GetUsers/>}
-/>
-
-<Route
-path="/dashboardstats"
-element={<DashboardStats/>}
-/>
-
-<Route
-path="/orders/:id"
-element={<OrderDetail/>}
-/>
-
-</Routes>
-
-
-</BrowserRouter>
-
+      </Routes>
+    </BrowserRouter>
   )
 }
 

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export default function AdminLogin() {
 
     const [email, setEmail] = useState('');
-    const [password , setPassword] = useState('');
+    const [password, setPassword] = useState('');
 
     const [userdata, setUserdata] = useState();
 
@@ -18,14 +18,14 @@ export default function AdminLogin() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:3000/api/user/admin/login', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/admin/login`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     email: email,
-                    password: password 
+                    password: password
                 })
             });
             const data = await response.json();
@@ -42,14 +42,14 @@ export default function AdminLogin() {
                     localStorage.setItem("user_id", data.user.id);
                 }
 
-                console.log(" User logged in successfully. User ID:", data.user.id);
-                navigate("/products");
+                console.log("User logged in successfully. User ID:", data.user.id);
+                navigate("/dashboard");
             } else {
                 alert(data.message);
             }
 
         } catch (e) {
-            console.error("Login error:", e); 
+            console.error("Login error:", e);
             alert("Something went wrong. Please try again.")
         }
     }

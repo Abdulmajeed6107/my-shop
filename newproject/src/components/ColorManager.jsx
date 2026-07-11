@@ -11,27 +11,27 @@ export default function ColorManager({ productId }) {
 
   useEffect(() => {
     // fetch this product's colors
-    fetch(`/http://localhost:3000/api/products/${productId}/colors`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/products/${productId}/colors`)
       .then(r => r.json()).then(setColors);
 
     // fetch master colors list
-    fetch(`/http://localhost:3000/api/colors`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/colors`)
       .then(r => r.json()).then(setAllColors);
   }, [productId]);
 
   const addColor = async () => {
-    await fetch(`/http://localhost:3000/api/products/${productId}/colors`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/products/${productId}/colors`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)
     });
     // refresh
-    fetch(`/http://localhost:3000/api/products/${productId}/colors`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/products/${productId}/colors`)
       .then(r => r.json()).then(setColors);
   };
 
   const removeColor = async (id) => {
-    await fetch(`/http://localhost:3000/api/products/${productId}/colors/${id}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/products/${productId}/colors/${id}`, {
       method: "DELETE"
     });
     setColors(colors.filter(c => c.id !== id));

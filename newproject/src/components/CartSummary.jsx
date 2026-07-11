@@ -28,7 +28,7 @@ const CartSummary = () => {
 
     const saveUserLocation = async (finalAddress, user_id, name, phone) => {
 
-        await fetch('http://localhost:3000/api/addresses/create-address', {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/addresses/create-address`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ const CartSummary = () => {
         const user = JSON.parse(localStorage.getItem("user"));
         const user_id = user?.id;
 
-        fetch(`http://localhost:3000/api/cartitems/${user_id}`)
+        fetch(`${import.meta.env.VITE_API_URL}/api/cartitems/${user_id}`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {

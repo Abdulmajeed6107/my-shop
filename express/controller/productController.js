@@ -17,13 +17,13 @@ export const GetAllProducts = async (req, res) => {
           imageUrl = product.image;
         } else if (product.image.startsWith('/')) {
           // has leading slash → /uploads/potatoes.png
-          imageUrl = `http://localhost:3000${product.image}`;
+          imageUrl = `${process.env.VITE_API_URL}${product.image}`;
         } else {
           // no leading slash → uploads/filename.png
           const filename = product.image
             .replace(/^uploads\//, "")
             .replace(/^\//, "");
-          imageUrl = `http://localhost:3000/uploads/${filename}`;
+          imageUrl = `${process.env.VITE_API_URL}/uploads/${filename}`;
         }
       }
       return {
@@ -85,7 +85,7 @@ export const GetProductDetail = async (req, res) => {
         const filename = product.image
           .replace(/^uploads\//, "")
           .replace(/^\//, "");
-        imageUrl = `http://localhost:3000/uploads/${filename}`;
+        imageUrl = `${process.env.VITE_API_URL}/uploads/${filename}`;
       }
     }
 
@@ -163,7 +163,7 @@ export const UpdateProduct = async (req, res) => {
       message: "Product updated successfully!",
       productId: productId,
       image_url: image
-        ? `http://localhost:3000/uploads/${image}`
+        ? `${process.env.VITE_API_URL}/uploads/${image}`
         : null
 
     });

@@ -10,7 +10,7 @@ export const Orders = () => {
 
     const getOrders = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/orders');
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`);
             const data = await response.json();
             setOrders(data.orders);
         } catch (e) {

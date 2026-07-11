@@ -58,7 +58,7 @@ function AddProductPage() {
       for (let pair of data.entries()) {
         console.log(pair[0], pair[1]);
       }
-      const response = await fetch('http://localhost:3000/api/products/add-product', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/add-product`, {
         method: 'POST',
         body: data, // don't set Content-Type header, browser sets it with boundary
       });

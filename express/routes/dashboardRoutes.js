@@ -1,7 +1,6 @@
 
 import express from 'express'
-import { getDashboardStats } from '../controller/dashBoardController';
-
+import {getDashboardStats} from '../controller/dashBoardController.js'
 
 const routes = express.Router();
 

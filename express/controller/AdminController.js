@@ -1,4 +1,5 @@
 import db from "../config/db.js";
+
 const adminSignup = async (req, res) => {
 
     const {
@@ -80,7 +81,7 @@ export const AddProduct = async (req, res) => {
         return res.json({
             status: true,
             message: "Item added to products successfully!",
-            image_url: `http://localhost:3000/${image}`
+            image_url: `${process.env.VITE_API_URL}/${image}`
 
         });
 

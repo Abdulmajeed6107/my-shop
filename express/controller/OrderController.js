@@ -112,12 +112,29 @@ export const GetOrder = async (req, res) => {
 
 // PUT /api/orders/:id/status — update status
 export const UpdateOrder = async (req, res) => {
-    // router.put('/orders/:id/status',
-    await db.query(
-        `UPDATE orders SET status = ? WHERE id = ?`,
-        [req.body.status, req.params.id]
-    );
-    res.json({ message: 'Status updated' });
+    console.log("HIT status update:", req.params.id, req.body.status);
+
+    const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+    const { status } = req.body;
+
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ message: 'Invalid status value' });
+    }
+
+    try {
+        const [result] = await db.query(
+            `UPDATE orders SET status = ? WHERE id = ?`,
+            [status, req.params.id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.json({ message: 'Status updated' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 // recent orders last 10 
 export const RecentOrders = async (req, res) => {

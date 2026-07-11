@@ -11,7 +11,7 @@ const GetUsers = () => {
     const getusers = async () => {
 
         try {
-            const response = await fetch('http://localhost:3000/api/users/allusers');
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/allusers`);
             const data = await response.json();
 
             console.log("API response:", data);

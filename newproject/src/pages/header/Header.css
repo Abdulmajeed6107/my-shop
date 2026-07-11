@@ -75,7 +75,7 @@
 /* Glassmorphic Content Card for Main Banner */
 .glass-content-card {
   margin-top: 50px;
-  height: 450px;
+  height: 350px;
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -90,6 +90,7 @@
   transform: translateY(0);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  margin-left: 1rem;
 }
 
 @keyframes fadeInUp {
@@ -349,10 +350,15 @@
 /* Responsiveness overrides for the glassmorphic card on very small screens */
 @media (max-width: 767px) {
   .glass-content-card {
+
     margin: 1.5rem;
+    margin-left: 1rem;
     padding: 1.75rem 2rem;
     max-width: calc(100% - 3rem);
-    background: rgba(255, 255, 255, 0.9);
+    /* background: rgba(236, 148, 148, 0.9); */
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+    /* pointer-events: none; */
   }
 
   .banner-overlay {
@@ -377,4 +383,6 @@
   .banner-description {
     margin-bottom: 0.75rem;
   }
+  
 }
+

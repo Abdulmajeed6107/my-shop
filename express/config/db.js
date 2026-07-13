@@ -1,6 +1,11 @@
 import mysql from 'mysql2/promise';
 
 import 'dotenv/config';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const db = mysql.createPool({
   host: process.env.DBHOST,
@@ -11,6 +16,7 @@ const db = mysql.createPool({
   connectionLimit: 10,
   port: 4000,
   ssl: 'Amazon RDS'
+  
 });
 
 // db.connect((error) => {

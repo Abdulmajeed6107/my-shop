@@ -20,11 +20,12 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 
 app.use(express.json());
 
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",")
+  : ["http://localhost:5173", "http://localhost:5174"];
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:5174"
-  ],
+  origin: allowedOrigins,
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -68,7 +69,7 @@ app.use('/api/removeFromCart', cartRoutes);
 
 app.use('/api/orders', orderRoutes);
 
-app.use('/api', orderRoutes); 
+app.use('/api', orderRoutes);
 
 
 app.use('/api/update/', userRoutes);

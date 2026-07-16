@@ -92,7 +92,7 @@ export default function OrderDetail() {
             <tr key={item.id}>
               <td>
                 <img
-                  src={`http://localhost:3000/uploads/${item.image}`}
+                  src={`${import.meta.VITE_API_URL}/uploads/${item.image}`}
                   width={150}
                   height={150}
                   style={{ objectFit: "cover" }}

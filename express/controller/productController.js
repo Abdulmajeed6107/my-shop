@@ -3,7 +3,7 @@ import db from "../config/db.js";
 
 // get all products api 
 export const GetAllProducts = async (req, res) => {
-  const sql = "SELECT * FROM products WHERE is_active = 1"; 
+  const sql = "SELECT * FROM products WHERE is_active = 1";
   try {
     const [result] = await db.query(sql);
 
@@ -13,17 +13,17 @@ export const GetAllProducts = async (req, res) => {
 
       if (product.image) {
         if (product.image.startsWith('http')) {
-          // already a full URL (placeholder images)
+          // already a full URL (Cloudinary or placeholder images)
           imageUrl = product.image;
         } else if (product.image.startsWith('/')) {
           // has leading slash → /uploads/potatoes.png
-          imageUrl = `${process.env.VITE_API_URL}${product.image}`;
+          imageUrl = `${process.env.BASE_URL}${product.image}`;
         } else {
           // no leading slash → uploads/filename.png
           const filename = product.image
             .replace(/^uploads\//, "")
             .replace(/^\//, "");
-          imageUrl = `${process.env.VITE_API_URL}/uploads/${filename}`;
+          imageUrl = `${process.env.BASE_URL}/uploads/${filename}`;
         }
       }
       return {
@@ -85,7 +85,7 @@ export const GetProductDetail = async (req, res) => {
         const filename = product.image
           .replace(/^uploads\//, "")
           .replace(/^\//, "");
-        imageUrl = `${process.env.VITE_API_URL}/uploads/${filename}`;
+        imageUrl = `${process.env.BASE_URL}/uploads/${filename}`;
       }
     }
 
@@ -100,6 +100,7 @@ export const GetProductDetail = async (req, res) => {
       }
 
     });
+    res.json({ status: true, products: products });
 
 
   } catch (error) {
@@ -145,10 +146,10 @@ export const UpdateProduct = async (req, res) => {
   console.log("BODY:", req.body);
   console.log("FILE:", req.file);
 
-  const { name, price, description, sku, is_active, category  } = req.body;
+  const { name, price, description, sku, is_active, category } = req.body;
 
   const image = req.file
-    ? req.file.filename
+    ? req.file.path
     : null;
 
   try {
@@ -163,8 +164,10 @@ export const UpdateProduct = async (req, res) => {
       message: "Product updated successfully!",
       productId: productId,
       image_url: image
-        ? `${process.env.VITE_API_URL}/uploads/${image}`
-        : null
+
+      //   image_url: image
+      // ? `${process.env.VITE_API_URL}/uploads/${image}`
+      // : null
 
     });
 

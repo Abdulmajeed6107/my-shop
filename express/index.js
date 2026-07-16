@@ -18,11 +18,13 @@ import colorRoutes from './routes/colorRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 
 
-app.use(express.json());
+app.use(express.json());      
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")
   : ["http://localhost:5173", "http://localhost:5174"];
+
+  console.log("Allowed origins:", allowedOrigins);
 
 app.use(cors({
   origin: allowedOrigins,
@@ -36,7 +38,8 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:5173",
-      "http://localhost:5174"
+      "http://localhost:5174",
+      'https://my-shop-tawny-three.vercel.app/'
     ],
     methods: ["GET", "POST"],
     credentials: true

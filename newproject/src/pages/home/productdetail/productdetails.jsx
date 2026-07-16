@@ -67,7 +67,7 @@ export default function ProductDetail({ productId }) {
 
     try {
 
-      const response = await fetch('http://localhost:3000/api/cart', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -98,12 +98,11 @@ export default function ProductDetail({ productId }) {
 
 
 
-  const baseUrl = "http://localhost:3000";
-
+  const baseUrl = "https://my-shop-q1uu.onrender.com";
 
   const getProductDetail = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/products/' + id);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
       const data = await response.json();
       setProductDetail(data);
     } catch (err) {

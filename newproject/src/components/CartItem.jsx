@@ -34,7 +34,7 @@ const Cart = () => {
         fetchCartItems();
     }, [user_id]);
 
-    const fetchCartItems = async () => {
+    export const fetchCartItems = async () => {
         try {
             console.log(`📡 Fetching cart for user: ${user_id}`);
             const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/cartitems/${user_id}`);
@@ -98,7 +98,9 @@ const Cart = () => {
                     </button>
                 </div>
             ) : (
+
                 // Your cart items mapping code here...
+
                 cartItems.map(item => (
                     <div key={item.id} className="flex justify-between items-center border p-4 mb-4 rounded-lg">
                         <div className="flex gap-6">

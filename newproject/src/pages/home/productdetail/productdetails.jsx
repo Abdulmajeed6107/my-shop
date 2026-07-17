@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ColorManager from "../../../components/ColorManager";
+import { fetchCartItems } from "../../../components/CartItem"; // Import the function
 // import { addToCart } from "../../../../../express/controller/cartController";
 
 export default function ProductDetail({ productId }) {
@@ -23,6 +24,7 @@ export default function ProductDetail({ productId }) {
 
   useEffect(() => {
     if (id) {
+      console.log("API URL:", import.meta.env.VITE_API_URL);
       fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}/colors`)
         .then(r => r.json())
         .then(setProductColors)
@@ -55,9 +57,9 @@ export default function ProductDetail({ productId }) {
     window.dispatchEvent(new Event("favoritesUpdated"));
   };
 
-  const addToCart = async (user_id, product_id, quantity) => {
+  const addToCart = async (user_id, product_id, quantity, color_id = null) => {
 
-    console.log("Adding to cart:", { user_id, product_id, quantity }); // Debug log
+    console.log("Adding to cart:", { user_id, product_id, quantity, color_id }); // Debug log
 
     if (!user_id) {
       alert("Please login first!");
@@ -84,6 +86,8 @@ export default function ProductDetail({ productId }) {
       console.log("Response from server:", data); // See exact server response
 
       if (response.ok) {
+        fetchCartItems(); // Refresh cart items after adding
+
         alert(data.message);
         navigate('/products/');
 

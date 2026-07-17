@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LocationMap from "./LocationMap";
-
+import { useCart } from "../hooks/useCart";
 
 const Cart = () => {
-    const [cartItems, setCartItems] = useState([]);
-    const [loading, setLoading] = useState(true);
+    // const [cartItems, setCartItems] = useState([]);
+    // const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     const [userLocation, setUserLocation] = useState(null);
+
+    const { cartItems, loading, fetchCartItems } = useCart();
 
     const saveLocation = (location) => {
 
@@ -31,32 +33,32 @@ const Cart = () => {
             return;
         }
 
-        fetchCartItems();
+        fetchCartItems(user_id);
     }, [user_id]);
 
-    export const fetchCartItems = async () => {
-        try {
-            console.log(`📡 Fetching cart for user: ${user_id}`);
-            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/cartitems/${user_id}`);
+    //  const fetchCartItems = async () => {
+    //     try {
+    //         console.log(`📡 Fetching cart for user: ${user_id}`);
+    //         const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/cartitems/${user_id}`);
 
-            console.log("📦 API Response:", res.data);
-            console.log("🖼️ First item image value:", res.data.cart?.[0]?.image);
+    //         console.log("📦 API Response:", res.data);
+    //         console.log("🖼️ First item image value:", res.data.cart?.[0]?.image);
 
-            if (res.data.success) {
-                const items = res.data.cart || [];
+    //         if (res.data.success) {
+    //             const items = res.data.cart || [];
 
-                setCartItems(items);
+    //             setCartItems(items);
 
-                //  Sync badge in TopHeader
-                localStorage.setItem("cartItems", JSON.stringify(items));
-                window.dispatchEvent(new Event("cartUpdated"));
-            }
-        } catch (error) {
-            console.error(" Fetch error:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    //             //  Sync badge in TopHeader
+    //             localStorage.setItem("cartItems", JSON.stringify(items));
+    //             window.dispatchEvent(new Event("cartUpdated"));
+    //         }
+    //     } catch (error) {
+    //         console.error(" Fetch error:", error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const removeItem = async (id) => {
         try {
@@ -66,7 +68,7 @@ const Cart = () => {
             )
                 .then(res => console.log(res.data))
                 .catch(err => console.log(err));
-            await fetchCartItems();
+            await fetchCartItems(user_id); // Refresh cart items after deletion
         } catch (error) {
 
             console.log("URL:", error.config?.url);

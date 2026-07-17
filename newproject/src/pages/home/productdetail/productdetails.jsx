@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ColorManager from "../../../components/ColorManager";
 import { fetchCartItems } from "../../../components/CartItem"; // Import the function
 // import { addToCart } from "../../../../../express/controller/cartController";
-
+import { useCart } from "../../../hooks/useCart";
 export default function ProductDetail({ productId }) {
 
   const [selectedColor, setSelectedColor] = useState(null);
@@ -86,7 +86,8 @@ export default function ProductDetail({ productId }) {
       console.log("Response from server:", data); // See exact server response
 
       if (response.ok) {
-        fetchCartItems(); // Refresh cart items after adding
+
+         fetchCartItems(user_id); // Refresh cart items after adding
 
         alert(data.message);
         navigate('/products/');

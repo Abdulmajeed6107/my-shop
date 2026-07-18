@@ -65,7 +65,7 @@ export const AddProduct = async (req, res) => {
 
     // Image path from multer
     // const image = req.file ? `uploads/${req.file.filename}` : null;
-    const image = req.file ? req.file.filename : null;
+    const image = req.file ? req.file.path : null;
 
 
     if (!image) {
@@ -81,7 +81,7 @@ export const AddProduct = async (req, res) => {
         return res.json({
             status: true,
             message: "Item added to products successfully!",
-            image_url: `${process.env.VITE_API_URL}/${image}`
+            image_url: image
 
         });
 

@@ -1,6 +1,7 @@
 // pages/admin/OrderDetail.jsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { buildImageUrl } from "../components/buildImageUrl";
 
 export default function OrderDetail() {
   const { id } = useParams();
@@ -92,7 +93,7 @@ export default function OrderDetail() {
             <tr key={item.id}>
               <td>
                 <img
-                  src={`${import.meta.VITE_API_URL}/uploads/${item.image}`}
+                  src={buildImageUrl(item.image)}
                   width={150}
                   height={150}
                   style={{ objectFit: "cover" }}

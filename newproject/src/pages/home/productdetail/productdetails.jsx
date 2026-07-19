@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ColorManager from "../../../components/ColorManager";
-import fetchCartItems from "../../../hooks/useCart";
 // import { addToCart } from "../../../../../express/controller/cartController";
 import { useCart } from "../../../hooks/useCart";
+
 export default function ProductDetail({ productId }) {
 
   const [selectedColor, setSelectedColor] = useState(null);
@@ -20,6 +20,7 @@ export default function ProductDetail({ productId }) {
   const [product, setProduct] = useState(null);
   const [activeTab, setActiveTab] = useState("info"); // "info" | "colors"
   const { id } = useParams();
+  const { cartItems, loading, fetchCartItems } = useCart();
 
 
   useEffect(() => {
@@ -87,7 +88,7 @@ export default function ProductDetail({ productId }) {
 
       if (response.ok) {
 
-         fetchCartItems(user_id); // Refresh cart items after adding
+        fetchCartItems(user_id); // Refresh cart items after adding
 
         alert(data.message);
         navigate('/products/');

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ColorManager from "../../../components/ColorManager";
-import { fetchCartItems } from "../../../components/CartItem"; // Import the function
+import fetchCartItems from "../../../hooks/useCart";
 // import { addToCart } from "../../../../../express/controller/cartController";
 import { useCart } from "../../../hooks/useCart";
 export default function ProductDetail({ productId }) {

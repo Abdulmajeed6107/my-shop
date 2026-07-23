@@ -8,10 +8,14 @@ import Cart from "../components/CartItem";
 import CartSummary from "../components/CartSummary";
 import LocationMap from "../components/LocationMap";
 import OrderSuccess from "../components/OrderSuccess";
-import About from "../components/AboutUs";
+import AboutUs from "../pages/about";
 import Profile from "../pages/profile/Profile";
 import Admin from "../pages/admin/Admin";
 import FavoritesPage from "../components/Favorites";
+import Policies from "../pages/policies/Policies";
+import Contact from "../pages/contact/Contact";
+import Locator from '../pages/locator'
+// import ContactUs from "../components/ContactUs";
 // import AddToCart from "../pages/cart/addcart";
 
 export default function AppRoute() 
@@ -28,10 +32,15 @@ return(
     <Route path="/cartsummary" element = {<CartSummary />} />
     <Route path="/OrderSuccess" element={<OrderSuccess />} />
     {/* <Route path="/products" element = {<ProductsPage />} /> */}
-    <Route path="/about" element = {<About />} />
+    <Route path="/about" element = {<AboutUs />} />
     <Route path="/profile" element = {<Profile />} />
     <Route path="/admin" element = {<Admin />} />
     <Route path="/favorite" element= {<FavoritesPage  />} />
+    <Route path="/policies" element= {<Policies  />} />
+    <Route path="/contact" element= {<Contact  />} />
+    <Route path="/locator" element= {<Locator  />} />
+
+    
     {/* <Route path="/product/addtocart" element = {<AddToCart />} /> */}
 
 

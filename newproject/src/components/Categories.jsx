@@ -2,8 +2,8 @@
 const CategoryBootom = () => {
   return (
     <div className="category-card">
-      <h3 className="text-white mb-4">Categories</h3>
-      <div className="text-white-50">
+      <h3 className="mb-4">Categories</h3>
+      <div className="">
         <p>Women's Unstiched Suits</p>
         <p>Women's Stiched Suits</p>
         <p>Men's Unstiched Suits</p>

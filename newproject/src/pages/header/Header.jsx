@@ -1,6 +1,7 @@
 import MyNavbar from '../../components/Navbarcustom';
 import TopHeader from '../../components/TopHeader';
 import './Header.css';
+import Footer from '../../components/Footer';
 import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
@@ -153,6 +154,7 @@ export default function Header() {
 
                 </div>
             </div>
+            <Footer />
         </>
     );
 }

@@ -36,7 +36,7 @@ const Cart = () => {
         fetchCartItems(user_id);
     }, [user_id]);
     
-        fetchCartItems(user_id);
+        // fetchCartItems(user_id);
 
     //  const fetchCartItems = async () => {
     //     try {

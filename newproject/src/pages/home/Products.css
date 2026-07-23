@@ -102,4 +102,25 @@
         height: 28px;
         font-size: 12px;
     }
+
+    .heartntext {
+        position: absolute;
+        top: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+
+        /* Layout fixes */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .heartntext p {
+        margin: 0;
+        /* Removes default paragraph spacing */
+        font-size: 14px;
+        /* Optional: adjusts text size under the heart */
+    }
+
 }

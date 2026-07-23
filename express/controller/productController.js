@@ -3,48 +3,66 @@ import db from "../config/db.js";
 
 // get all products api 
 export const GetAllProducts = async (req, res) => {
-  const sql = "SELECT * FROM products WHERE is_active = 1";
   try {
-    const [result] = await db.query(sql);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12;
+    const offset = (page - 1) * limit;
 
+    // 1. Get total count for pagination
+    const [countResult] = await db.query(
+      "SELECT COUNT(*) AS total FROM products WHERE is_active = 1"
+    );
+    const totalProducts = countResult[0].total;
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // 2. Get paginated products
+    const [result] = await db.query(
+      "SELECT * FROM products WHERE is_active = 1 ORDER BY created_at DESC LIMIT ? OFFSET ?",
+      [limit, offset]
+    );
+
+    // 3. Transform image URLs
     const products = result.map(product => {
-
       let imageUrl = null;
 
       if (product.image) {
         if (product.image.startsWith('http')) {
-          // already a full URL (Cloudinary or placeholder images)
           imageUrl = product.image;
         } else if (product.image.startsWith('/')) {
-          // has leading slash → /uploads/potatoes.png
           imageUrl = `${process.env.BASE_URL}${product.image}`;
         } else {
-          // no leading slash → uploads/filename.png
           const filename = product.image
             .replace(/^uploads\//, "")
             .replace(/^\//, "");
           imageUrl = `${process.env.BASE_URL}/uploads/${filename}`;
         }
       }
+
       return {
         ...product,
         image: imageUrl
       };
-
     });
 
     res.json({
       status: true,
-      products: products
+      products,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalProducts,
+        limit,
+      },
     });
+
   } catch (err) {
     console.error("GetAllProducts error:", err);
-    res.json({
+    res.status(500).json({
       status: false,
       message: "unable to fetch the products !"
     });
   }
-}
+};
 // product detailed api 
 export const GetProductDetail = async (req, res) => {
 

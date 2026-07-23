@@ -5,12 +5,19 @@ import TopHeader from '../../components/TopHeader';
 import { useSearchParams } from "react-router-dom";
 import BootomPage from '../../components/BootomPage';
 import './Products.css';
+import Pagination from '../../components/Pagination';
+import Footer from '../../components/Footer';
+
 
 function ProductsPage() {
+  const [page, setPage] = useState(1);
+  const [limit] = useState(12); // 
   const [error, setError] = useState(null);
   const [items, setItems] = useState();
+  const [pagination, setPagination] = useState(null);
   const [isLoading, setisLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [favorites, setFavorites] = useState([]);
 
   const [searchParams] = useSearchParams();
   const search = searchParams.get("search") || "";
@@ -21,12 +28,16 @@ function ProductsPage() {
   };
 
   const getItems = async () => {
+    setisLoading(true); // ✅ so it shows loading again when page changes
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
+      // ✅ fetch needs query params built into the URL, not a `params` option
+      const url = `${import.meta.env.VITE_API_URL}/api/products?page=${page}&limit=${limit}`;
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Api fetch error');
       const data = await response.json();
       if (data && data.status === false) throw new Error(data.message || 'API error');
       setItems(data);
+      setPagination(data.pagination);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -34,13 +45,48 @@ function ProductsPage() {
     }
   };
 
-  useEffect(() => { getItems(); }, []);
+  useEffect(() => {
+    const favs = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(favs);
+
+  }, []);
+
+  const toggleFavorite = (e, item) => {
+    e.stopPropagation();
+
+    let updated;
+
+    const exists = favorites.some(f => f.id === item.id);
+
+    if (exists) {
+      updated = favorites.filter(f => f.id !== item.id);
+    } else {
+      updated = [...favorites, item];
+    }
+
+    setFavorites(updated);
+    localStorage.setItem("favorites", JSON.stringify(updated));
+
+    // Notify TopHeader to update count
+    window.dispatchEvent(new Event("favoritesUpdated"));
+
+  };
+
+  useEffect(() => { getItems(); }, [page, limit]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Get unique categories from products
   const allProducts = items?.products || [];
   const categories = ['All', ...new Set(allProducts.map(p => p.category).filter(Boolean))];
 
-  // Filter by search AND category
+  // ⚠️ Note: this only filters within the CURRENT page's products.
+  // If you want search/category to work across your whole catalog,
+  // you need to pass `search` and `category` to the backend query
+  // instead of filtering client-side here.
   const filteredProducts = allProducts.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
@@ -100,7 +146,7 @@ function ProductsPage() {
               </p>
             ) : (
               filteredProducts.map((item) => (
-                <div className="col-6 col-md-4 col-lg-3 mb-5" key={item.id}>
+                <div className="col-6 col-md-4 col-lg-3 mb-5 position-relative" key={item.id}>
                   <div
                     className="card h-100  shadow-sm border-0"
                     style={{ cursor: 'pointer', transition: 'transform 0.2s ease, box-shadow 0.2s ease' }}
@@ -116,16 +162,12 @@ function ProductsPage() {
                   >
                     <div className="card-body p-2 p-md-3 d-flex flex-column">
                       <div>
-                        {/* Category badge on the card */}
                         {item.category && item.category !== 'Uncategorized' && (
                           <span className="badge mb-2" style={{ backgroundColor: '#20b2aa' }}>
                             {item.category}
                           </span>
                         )}
-                        <div
-                          className="product-image-container bg-light rounded-"
-                        // style={{ height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        >
+                        <div className="product-image-container bg-light rounded-">
                           <img
                             src={item.image || '/placeholder.png'}
                             alt={item.name}
@@ -136,7 +178,6 @@ function ProductsPage() {
                         <h5 className="card-title product-title">{item.name}</h5>
                       </div>
                       <div>
-                        {/* rating starts here  */}
                         <div className="text-warning rating">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <i key={i} className={`bi ${i < Math.floor(item.rating || 5) ? 'bi-star-fill' : 'bi-star'}`}></i>
@@ -149,24 +190,53 @@ function ProductsPage() {
                           <button
                             className="btn btn-outline-success rounded-circle d-flex align-items-center justify-content-center bag-btn"
                             style={{ width: '32px', height: '32px' }}
-                            onClick={(e) => e.stopPropagation()} // prevent card click
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <i className="bi bi-bag"></i>
                           </button>
                         </div>
-
+                        <button className='btn btn-outline-dark w-100 mt-2'>Add To Cart</button>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      )}
-      <BootomPage />
-      
 
+                  {/* favorites heart on products  */}
+
+                  <div className="position-absolute top-0 end-0 ms-5 translate-middle-x d-flex">
+                    <button
+                      className={`btn ${favorites.some(f => f.id === item.id)
+                        ? "btn-danger"
+                        : "btn-outline-danger"
+                        }`} onClick={(e) => toggleFavorite(e, item)}
+                    >
+                      <i
+                        className={`bi ${favorites.some(f => f.id === item.id)
+                            ? "bi-heart-fill"
+                            : "bi-heart"
+                          }`}
+                      />
+                    {/* {isFavorite ? " Saved" : " Add to Favorites"} */}
+                  </button>
+                  {/* <i className="bi bi-suit-heart fs-5" style={{ color: "" }}></i> */}
+                </div>
+                </div>
+          ))
+            )}
+        </div>
+
+          {/* ── PAGINATION ── ✅ now actually rendered */}
+      {pagination && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
+    </div >
+      )
+}
+      <BootomPage />
+      <Footer />
     </>
   );
 }

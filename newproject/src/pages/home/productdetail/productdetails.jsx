@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import ColorManager from "../../../components/ColorManager";
 // import { addToCart } from "../../../../../express/controller/cartController";
 import { useCart } from "../../../hooks/useCart";
+import TopHeader from "../../../components/TopHeader";
+import MyNavbar from "../../../components/Navbarcustom";
 
 export default function ProductDetail({ productId }) {
 
@@ -141,7 +143,9 @@ export default function ProductDetail({ productId }) {
   return (
 
     <>
-
+    <TopHeader />
+    <MyNavbar />
+    <button className="btn btn-outline-dark ms-3" onClick={()=>window.history.back()}>← back</button>
       <div>
 
         <div className="container mt-5">
@@ -213,7 +217,10 @@ export default function ProductDetail({ productId }) {
                 </div>
               )}
 
-              <p className="card-text">{productDetail.product.description}</p>
+              <div className="card-text" dangerouslySetInnerHTML={{ __html: productDetail.product.description }}
+                style={{ maxWidth: "800px", minWidth: 0, overflowWrap: "break-word" }}
+
+              />
 
               <div className="input-group mb-3" style={{ maxWidth: "160px" }}>
                 <button
@@ -240,7 +247,7 @@ export default function ProductDetail({ productId }) {
                   +
                 </button>
               </div>
-              <div className="d-flex justify-content-start gap-3 flex-wrap">
+              <div className="d-flex justify-content-start gap-3 flex-wrap mb-5 mt-5">
                 <button
                   className="btn btn-primary"
                   onClick={() => addToCart(user_id, productDetail.product.id, quantity, selectedColor?.id)}

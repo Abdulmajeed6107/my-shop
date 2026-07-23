@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
-const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Stollers & Scarves", "Suit"]; // adjust as needed
+const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Stollers & Scarves", "Suit", "Women", "Men", "Children"]; // adjust as needed
 
 
 function AddProductPage() {
@@ -143,13 +145,15 @@ function AddProductPage() {
           {/* Description */}
           <div className="mb-3">
             <label className="form-label fw-semibold">Description</label>
-            <textarea
-              name="description"
-              className="form-control"
-              rows={3}
-              placeholder="Product description..."
+
+            <ReactQuill
               value={formData.description}
-              onChange={handleChange}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  description: value,
+                }))
+              }
             />
           </div>
 

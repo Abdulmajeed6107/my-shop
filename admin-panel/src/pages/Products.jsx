@@ -38,8 +38,7 @@ function Products() {
         try {
 
 
-            const response = await API.get("/products");
-
+            const response = await API.get("/products?all=true");
 
             console.log(response.data);
 
@@ -101,39 +100,45 @@ function Products() {
             </h1>
             {/* <h3>Total Products </h3> */}
 
-            {
-                items.map((product) => (
+            <div className="container-fluid">
+                <div className="row g-4 justify-content-center">
 
-                    <div key={product.id} className="card mt-3" style={{ width: "18rem" }}>
-                        <img src={product.image} alt="" />
+                    {
+                        items.map((product) => (
 
-                        <h3>
-                            {product.name}
-                        </h3>
+                            <div key={product.id} className="card mt-3" style={{ width: "18rem", height: "" }}>
+                                <img src={product.image} alt="" className="w-50" />
 
-
-                        <p>
-                            {product.price} Rs.
-                        </p>
-
-                        <div className=" d-flex justify-content-center align-items-center gap-3">
-                            <button onClick={() => navigate(`/update-product/${product.id}`)}>Update Product</button>
-                            <button onClick={() => DeleteProduct(product.id)}>Delete Product</button>
-                            <button
-                                className="btn btn-info"
-                                onClick={() => {
-                                    setSelectedProduct(product);
-                                    setShowColorModal(true);
-                                }}
-                            >
-                                🎨 Colors
-                            </button>
-                        </div>
-                    </div>
+                                <h3>
+                                    {product.name}
+                                </h3>
 
 
-                ))
-            }
+                                <p>
+                                    {product.price} Rs.
+                                </p>
+
+                                <div className=" d-flex justify-content-center align-items-center gap-3">
+                                    <button onClick={() => navigate(`/update-product/${product.id}`)}>Update Product</button>
+                                    <button onClick={() => DeleteProduct(product.id)}>Delete Product</button>
+                                    <button
+                                        className="btn btn-info"
+                                        onClick={() => {
+                                            setSelectedProduct(product);
+                                            setShowColorModal(true);
+                                        }}
+                                    >
+                                        🎨 Colors
+                                    </button>
+                                </div>
+                            </div>
+
+
+                        ))
+                    }
+
+                </div>
+            </div>
 
             {showColorModal && selectedProduct && (
                 <div

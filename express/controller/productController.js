@@ -5,6 +5,7 @@ import db from "../config/db.js";
 export const GetAllProducts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
+    const all = req.query.all === "true";
     const limit = parseInt(req.query.limit) || 12;
     const offset = (page - 1) * limit;
 
@@ -13,13 +14,17 @@ export const GetAllProducts = async (req, res) => {
       "SELECT COUNT(*) AS total FROM products WHERE is_active = 1"
     );
     const totalProducts = countResult[0].total;
-    const totalPages = Math.ceil(totalProducts / limit);
+    const totalPages = all ? 1 : Math.ceil(totalProducts / limit);
 
-    // 2. Get paginated products
-    const [result] = await db.query(
-      "SELECT * FROM products WHERE is_active = 1 ORDER BY created_at DESC LIMIT ? OFFSET ?",
-      [limit, offset]
-    );
+    // 2. Get products — full list if `all=true`, otherwise paginated
+    const [result] = all
+      ? await db.query(
+        "SELECT * FROM products WHERE is_active = 1 ORDER BY created_at DESC"
+      )
+      : await db.query(
+        "SELECT * FROM products WHERE is_active = 1 ORDER BY created_at DESC LIMIT ? OFFSET ?",
+        [limit, offset]
+      );
 
     // 3. Transform image URLs
     const products = result.map(product => {
@@ -48,10 +53,10 @@ export const GetAllProducts = async (req, res) => {
       status: true,
       products,
       pagination: {
-        currentPage: page,
+        currentPage: all ? 1 : page,
         totalPages,
         totalProducts,
-        limit,
+        limit: all ? totalProducts : limit,
       },
     });
 

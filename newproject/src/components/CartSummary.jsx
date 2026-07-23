@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { placeOrder } from "./OrderPlace";
+import TopHeader from "./TopHeader";
+import MyNavbar from "./Navbarcustom";
 
 
 const CartSummary = () => {
@@ -160,155 +162,160 @@ const CartSummary = () => {
 
     return (
 
-        <div className="container">
-            <div className="row">
+        <div>
+            <TopHeader />
+            <MyNavbar />
+            <button className="btn btn-outline-dark ms-3 mb-3" onClick={() => window.history.back()}>←Back</button>
+            <div className="container">
+                <div className="row">
 
-                {/* adress and payment details div   */}
+                    {/* adress and payment details div   */}
 
-                <div className="col-md-8">
-                    <h1 className="text-3xl font-bold mb-8">Review and place your order
+                    <div className="col-md-8">
+                        <h1 className="text-3xl font-bold mb-8">Review and place your order
 
-                    </h1>
-                    <div className="border p-4 mb-4 rounded-lg">
-                        <h3>Delivery address
-                        </h3>
-                        <p>{address}</p>
-                    </div>
-                    <div className="border p-4 mb-4 rounded-lg">
-                        <h3>Personal details
-                        </h3>
-                        <p>{userData?.full_name || "John Doe"}</p>
-                        <p>{userData?.phone || "+92 3143415032"}</p>
-                    </div>
-
-                    {/* Payment Method Section */}
-
-                    <div className="border p-4 mb-4 rounded-lg">
-                        <h3 className="font-semibold text-lg mb-3">Payment Method</h3>
-
-                        <div className="flex flex-col gap-3">
-                            {Object.keys(paymentIcons).map((method) => (
-                                <label
-                                    key={method}
-                                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${paymentMethod === method
-                                        ? "border-green-600 bg-green-50"
-                                        : "border-gray-200 hover:border-green-400"
-                                        }`}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="paymentMethod"
-                                        value={method}
-                                        checked={paymentMethod === method}
-                                        onChange={(e) => setPaymentMethod(e.target.value)}
-                                        className="accent-green-600"
-                                    />
-                                    <span className="text-xl">{paymentIcons[method]}</span>
-                                    <span className="font-medium">{method}</span>
-                                </label>
-                            ))}
+                        </h1>
+                        <div className="border p-4 mb-4 rounded-lg">
+                            <h3>Delivery address
+                            </h3>
+                            <p>{address}</p>
+                        </div>
+                        <div className="border p-4 mb-4 rounded-lg">
+                            <h3>Personal details
+                            </h3>
+                            <p>{userData?.full_name || "John Doe"}</p>
+                            <p>{userData?.phone || "+92 3143415032"}</p>
                         </div>
 
-                        {/* Show selected payment */}
-                        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                            <p className="text-sm text-gray-600">
-                                Selected: <span className="font-semibold text-green-700">{paymentMethod}</span>
-                            </p>
+                        {/* Payment Method Section */}
 
-                            {/* Show card fields only if card is selected */}
-                            {paymentMethod === "Debit Card or Credit Card" && (
-                                <div className="mt-3 flex flex-col gap-2">
-                                    <input
-                                        type="text"
-                                        placeholder="Card Number"
-                                        maxLength={16}
-                                        className="border p-2 rounded-lg w-full"
-                                        onChange={(e) => setAccountName(e.target.value)}
+                        <div className="border p-4 mb-4 rounded-lg">
+                            <h3 className="font-semibold text-lg mb-3">Payment Method</h3>
 
-                                    />
-                                    <div className="flex gap-2">
+                            <div className="flex flex-col gap-3">
+                                {Object.keys(paymentIcons).map((method) => (
+                                    <label
+                                        key={method}
+                                        className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${paymentMethod === method
+                                            ? "border-green-600 bg-green-50"
+                                            : "border-gray-200 hover:border-green-400"
+                                            }`}
+                                    >
                                         <input
-                                            type="text"
-                                            placeholder="MM/YY"
-                                            maxLength={5}
-                                            className="border p-2 rounded-lg w-full"
-                                            onChange={(e) => setAccountNumber(e.target.value)}  // ✅ add this
-
+                                            type="radio"
+                                            name="paymentMethod"
+                                            value={method}
+                                            checked={paymentMethod === method}
+                                            onChange={(e) => setPaymentMethod(e.target.value)}
+                                            className="accent-green-600"
                                         />
-                                        <input
-                                            type="text"
-                                            placeholder="CVV"
-                                            maxLength={3}
-                                            className="border p-2 rounded-lg w-full"
-                                        />
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Show JazzCash/EasyPaisa number field */}
-                            {(paymentMethod === "JazzCash" || paymentMethod === "EasyPaisa") && (
-                                <div className="mt-3">
-                                    <input
-                                        type="text"
-                                        placeholder={`Enter ${paymentMethod} number`}
-                                        maxLength={11}
-                                        className="border p-2 rounded-lg w-full"
-                                        onChange={(e) => setAccountNumber(e.target.value)}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    <button
-                        className="bg-green-600 px-8 py-3 rounded-lg mt-6 w-full"
-                        onClick={handlePlaceOrder}
-                    >
-                        Place Order
-                    </button>
-                </div>
-
-                {/* order summary div  */}
-                <div className=" col-4 max-w-5xl mx-auto p-6">
-                    <h3 className="text-3xl font-bold mb-8">Order Summary</h3>
-
-                    {cartItems.length === 0 ? (
-                        <p>Your cart is empty.</p>
-                    ) : (
-                        <div>
-                            {cartItems.map(item => (
-                                <div key={item.id} className="flex justify-between items-center border p-4 mb-4 rounded-lg">
-                                    <div>
-
-                                        <h4>{item.name}</h4>
-                                        {/* 👇 show color if exists */}
-                                        {item.color_name && (
-                                            <div className="d-flex align-items-center gap-2 my-1">
-                                                <div style={{
-                                                    width: 16,
-                                                    height: 16,
-                                                    borderRadius: "50%",
-                                                    backgroundColor: item.hex_code,
-                                                    border: "1px solid #ccc"
-                                                }} />
-                                                <small className="text-muted">{item.color_name}</small>
-                                            </div>
-                                        )}
-                                        <p>${item.price} × {item.quantity}</p>
-                                    </div>
-                                </div>
-                            ))}
-                            <div className="text-3xl font-bold text-right mt-8">
-                                Total: ${total.toFixed(2)}
+                                        <span className="text-xl">{paymentIcons[method]}</span>
+                                        <span className="font-medium">{method}</span>
+                                    </label>
+                                ))}
                             </div>
-                            <button
-                                className="bg-green-600 px-8 py-3 rounded-lg mt-6 w-full"
-                                onClick={handlePlaceOrder}
-                            >
-                                Place Order
-                            </button>
+
+                            {/* Show selected payment */}
+                            <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                                <p className="text-sm text-gray-600">
+                                    Selected: <span className="font-semibold text-green-700">{paymentMethod}</span>
+                                </p>
+
+                                {/* Show card fields only if card is selected */}
+                                {paymentMethod === "Debit Card or Credit Card" && (
+                                    <div className="mt-3 flex flex-col gap-2">
+                                        <input
+                                            type="text"
+                                            placeholder="Card Number"
+                                            maxLength={16}
+                                            className="border p-2 rounded-lg w-full"
+                                            onChange={(e) => setAccountName(e.target.value)}
+
+                                        />
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                placeholder="MM/YY"
+                                                maxLength={5}
+                                                className="border p-2 rounded-lg w-full"
+                                                onChange={(e) => setAccountNumber(e.target.value)}  // ✅ add this
+
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="CVV"
+                                                maxLength={3}
+                                                className="border p-2 rounded-lg w-full"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Show JazzCash/EasyPaisa number field */}
+                                {(paymentMethod === "JazzCash" || paymentMethod === "EasyPaisa") && (
+                                    <div className="mt-3">
+                                        <input
+                                            type="text"
+                                            placeholder={`Enter ${paymentMethod} number`}
+                                            maxLength={11}
+                                            className="border p-2 rounded-lg w-full"
+                                            onChange={(e) => setAccountNumber(e.target.value)}
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    )}
+
+                        <button
+                            className="bg-green-600 px-8 py-3 rounded-lg mt-6 w-full"
+                            onClick={handlePlaceOrder}
+                        >
+                            Place Order
+                        </button>
+                    </div>
+
+                    {/* order summary div  */}
+                    <div className=" col-4 max-w-5xl mx-auto p-6">
+                        <h3 className="text-3xl font-bold mb-8">Order Summary</h3>
+
+                        {cartItems.length === 0 ? (
+                            <p>Your cart is empty.</p>
+                        ) : (
+                            <div>
+                                {cartItems.map(item => (
+                                    <div key={item.id} className="flex justify-between items-center border p-4 mb-4 rounded-lg">
+                                        <div>
+
+                                            <h4>{item.name}</h4>
+                                            {/* 👇 show color if exists */}
+                                            {item.color_name && (
+                                                <div className="d-flex align-items-center gap-2 my-1">
+                                                    <div style={{
+                                                        width: 16,
+                                                        height: 16,
+                                                        borderRadius: "50%",
+                                                        backgroundColor: item.hex_code,
+                                                        border: "1px solid #ccc"
+                                                    }} />
+                                                    <small className="text-muted">{item.color_name}</small>
+                                                </div>
+                                            )}
+                                            <p>${item.price} × {item.quantity}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                                <div className="text-3xl font-bold text-right mt-8">
+                                    Total: ${total.toFixed(2)}
+                                </div>
+                                <button
+                                    className="bg-green-600 px-8 py-3 rounded-lg mt-6 w-full"
+                                    onClick={handlePlaceOrder}
+                                >
+                                    Place Order
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

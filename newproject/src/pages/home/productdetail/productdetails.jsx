@@ -5,6 +5,7 @@ import ColorManager from "../../../components/ColorManager";
 import { useCart } from "../../../hooks/useCart";
 import TopHeader from "../../../components/TopHeader";
 import MyNavbar from "../../../components/Navbarcustom";
+import axios from 'axios';
 
 export default function ProductDetail({ productId }) {
 
@@ -18,7 +19,7 @@ export default function ProductDetail({ productId }) {
   const [productDetail, setProductDetail] = useState();
 
   const [isLoading, setisLoading] = useState(true);
-
+  const [reviews, setReviews] = useState([]);
   const [product, setProduct] = useState(null);
   const [activeTab, setActiveTab] = useState("info"); // "info" | "colors"
   const { id } = useParams();
@@ -43,6 +44,24 @@ export default function ProductDetail({ productId }) {
     setIsFavorite(favs.some(f => f.id === productDetail?.product?.id))
 
   }, [productDetail]);
+
+  const fetchReviews = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/reviews/${id}`
+      );
+
+      if (res.data.success) {
+        setReviews(res.data.reviews);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, [id]);
 
   const toggleFavorite = () => {
     const favs = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -143,9 +162,9 @@ export default function ProductDetail({ productId }) {
   return (
 
     <>
-    <TopHeader />
-    <MyNavbar />
-    <button className="btn btn-outline-dark ms-3" onClick={()=>window.history.back()}>← back</button>
+      <TopHeader />
+      <MyNavbar />
+      <button className="btn btn-outline-dark ms-3" onClick={() => window.history.back()}>← back</button>
       <div>
 
         <div className="container mt-5">
@@ -263,8 +282,41 @@ export default function ProductDetail({ productId }) {
                   <i className={`bi ${isFavorite ? "bi-heart-fill" : "bi-heart"}`}></i>
                   {isFavorite ? " Saved" : " Add to Favorites"}
                 </button>
-              </div>
 
+              </div>
+              <h3 className="mt-5">Customer Reviews</h3>
+
+              {reviews.length === 0 ? (
+                <p>No reviews yet.</p>
+              ) : (
+                reviews.map(review => (
+                  <div key={review.id} className="border rounded p-3 mb-3">
+
+                    <h5>
+                      {review.firstname} {review.lastname}
+                    </h5>
+
+                    <div className="text-warning mb-2">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <i
+                          key={i}
+                          className={`bi ${i < review.rating
+                              ? "bi-star-fill"
+                              : "bi-star"
+                            }`}
+                        />
+                      ))}
+                    </div>
+
+                    <p>{review.comment}</p>
+
+                    <small className="text-muted">
+                      {new Date(review.created_at).toLocaleDateString()}
+                    </small>
+
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

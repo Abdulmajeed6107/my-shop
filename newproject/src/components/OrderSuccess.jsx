@@ -12,7 +12,7 @@ const OrderSuccess = () => {
         <div className="order-success">
             <TopHeader />
             <MyNavbar />
-
+       <button className="btn btn-outline-dark ms-3" onClick={()=>window.history.back()}>←Back</button>
             <div className="p-3">
                 <h1>Order Placed Successfully!</h1>
                 <h4>Order Id: {orderId}</h4>

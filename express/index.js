@@ -16,6 +16,7 @@ import http from "http";
 import { Server } from "socket.io";
 import colorRoutes from './routes/colorRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
 
 
 app.use(express.json());      
@@ -94,7 +95,7 @@ app.use('/api/users', adminRoutes);
 
 app.use('/api/dashboard', dashboardRoutes);
 
-
+app.use("/api/reviews", reviewRoutes);
 
 
 

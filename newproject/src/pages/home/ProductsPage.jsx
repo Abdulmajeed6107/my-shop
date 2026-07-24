@@ -28,9 +28,9 @@ function ProductsPage() {
   };
 
   const getItems = async () => {
-    setisLoading(true); // ✅ so it shows loading again when page changes
+    setisLoading(true); // so it shows loading again when page changes
     try {
-      // ✅ fetch needs query params built into the URL, not a `params` option
+      // fetch needs query params built into the URL, not a `params` option
       const url = `${import.meta.env.VITE_API_URL}/api/products?page=${page}&limit=${limit}`;
       const response = await fetch(url);
       if (!response.ok) throw new Error('Api fetch error');

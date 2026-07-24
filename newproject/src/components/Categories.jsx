@@ -1,32 +1,34 @@
-
 const CategoryBootom = () => {
+  const categories = [
+    "Women's Unstiched Suits",
+    "Women's Stiched Suits",
+    "Men's Unstiched Suits",
+    "Branded Hijabs",
+    "Lawn Hijabs",
+    "Chiffon Hijabs",
+    "Daily Wear Hijabs",
+    "Silk Hijabs",
+    "Winter Hijabs",
+    "Summer Hijabs",
+    "Dupatta",
+    "Chiffon Dupatta",
+    "Cotton Dupatta",
+    "Lawn Dupatta",
+    "Stoller",
+    "Scarf",
+    "Suits",
+    "Capries",
+    "Tights",
+  ];
+
   return (
-    <div className="category-card">
-      <h3 className="mb-4">Categories</h3>
-      <div className="">
-        <p>Women's Unstiched Suits</p>
-        <p>Women's Stiched Suits</p>
-        <p>Men's Unstiched Suits</p>
-        <p>Branded Hijabs</p>
-        <p>Lawn Hijabs</p>
-        <p>Chiffon Hijabs</p>
-        <p>Daily Wear Hijabs</p>
-        <p>Silk Hijabs</p>
-        <p>Winter Hijabs</p>
-        <p>Summer Hijabs</p>
-        <p>Dupatta</p>
-        <p>Chiffon Dupatta</p>
-        <p>Cotton Dupatta</p>
-        <p>Lawn Dupatta</p>
-        <p>Stoller</p>
-        <p>Scarf</p>
-        <p>Suits</p>
-        <p>Capries</p>
-        <p>Tights</p>
-
+    <div className="bottom-page-content">
+      <h3 className="bottom-page-title">Categories</h3>
+      <div className="bottom-page-category-grid">
+        {categories.map((category) => (
+          <p key={category}>{category}</p>
+        ))}
       </div>
-
-
     </div>
   );
 };

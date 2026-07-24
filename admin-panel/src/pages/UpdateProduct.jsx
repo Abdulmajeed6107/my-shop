@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-const CATEGORIES = ["Uncategorized", "Dupatta", "Stoller", "Stollers & Scarves"]; // adjust as needed
+const CATEGORIES = ["Uncategorized", "Dupatta", "Stoller", "Scarf"]; // adjust as needed
 
 const UpdateProduct = () => {
 

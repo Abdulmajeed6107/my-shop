@@ -1,20 +1,17 @@
-import { useState } from 'react'
-import './login.css'
+import { useState } from 'react';
+import './login.css';
 import { useNavigate } from 'react-router-dom';
+import MyNavbar from '../../components/Navbarcustom';
+import TopHeader from '../../components/TopHeader';
+import Footer from '../../components/Footer';
 
 export default function Login() {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const [userdata, setUserdata] = useState();
-
     const [showPassword, setShowPassword] = useState(false);
-
     const navigate = useNavigate();
 
     const userLogin = async (e) => {
-
         e.preventDefault();
 
         try {
@@ -29,7 +26,6 @@ export default function Login() {
                 })
             });
             const data = await response.json();
-            // setUserdata(data);
 
             if (data.status) {
                 alert(data.message);
@@ -37,7 +33,6 @@ export default function Login() {
                 localStorage.setItem("user", JSON.stringify(data.user));
                 localStorage.setItem("token", data.token);
 
-                // Also save user_id separately (Important for Cart)
                 if (data.user.id) {
                     localStorage.setItem("user_id", data.user.id);
                 }
@@ -49,68 +44,83 @@ export default function Login() {
             }
 
         } catch (e) {
-            console.error("Login error:", e); 
+            console.error("Login error:", e);
             alert("Something went wrong. Please try again.")
         }
-    }
+    };
 
     return (
         <>
+            <TopHeader />
+            <MyNavbar />
 
-            <div className="container">
-                <div className="row d-flex justify-content-center">
-                    <div className="col-8 justify-content-center mt-3">
-                        <div className="card p-4 w-75"  >
-
-                            <h1 className="text-center mb-3">Sign In</h1>
-                            {/* from starts from here  */}
-                            <form action="" onSubmit={userLogin}>
-                                <div>
-                                    <input type="text" className="form-control mb-3 p-3" required
-                                        name="" id=""
-                                        placeholder="Enter your Email" onChange={(e) => setEmail(e.target.value)}
-                                        value={email}
-                                    />
-
-                                </div>
-                                <div className="d-flex align-items-center  position-relative">
-                                    <input type={showPassword ? "text" : "password"} className="form-control mb-3 p-3"
-                                        name="" id="" required
-                                        placeholder="Enter your Password" onChange={(e) => setPassword(e.target.value)} />
-                                    <i className={showPassword ? "bi bi-eye-fill p-2 position-absolute end-0 mb-2" : "bi bi-eye-slash-fill p-2 position-absolute end-0 mb-2"} onClick={() => setShowPassword(!showPassword)} ></i>
-                                </div>
-                                <div className="d-flex justify-content-between">
-                                    <div className='d-flex gap-3 align-items-center'>
-                                        <input type="checkbox" className="form-check"
-                                        /> Remember me
-
-                                    </div>
-                                    <div>
-                                        <button className="btn">Forgot Passowrd</button>
-
-                                    </div>
-                                </div>
-                                <div className='d-flex justify-content-center'>
-                                    <button className="btn mybtn-color rounded-pill  w-75 p-2 mt-3 " type='submit' >Login</button>
-
-                                </div>
-                            </form>
-                            <div className='text-center align-items-center mt-3 '>
-                                don't have acount?
-                                <button className='btn' onClick={() => navigate("/register")}>Register</button>
-
-                            </div>
-
+            <section className="auth-page">
+                <div className="auth-page-container">
+                    <div className="auth-card">
+                        <div className="auth-card-header">
+                            <h1>Sign In</h1>
+                            <p>Welcome back! Please enter your details.</p>
                         </div>
 
+                        <form onSubmit={userLogin}>
+                            <div className="auth-field">
+                                <label htmlFor="login-email">Email</label>
+                                <input
+                                    type="email"
+                                    id="login-email"
+                                    className="form-control"
+                                    required
+                                    placeholder="Enter your email"
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={email}
+                                />
+                            </div>
 
+                            <div className="auth-field">
+                                <label htmlFor="login-password">Password</label>
+                                <div className="auth-password-field">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        id="login-password"
+                                        className="form-control"
+                                        required
+                                        placeholder="Enter your password"
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        value={password}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="auth-toggle-password"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                    >
+                                        <i className={showPassword ? "bi bi-eye-fill" : "bi bi-eye-slash-fill"}></i>
+                                    </button>
+                                </div>
+                            </div>
 
+                            <div className="auth-options">
+                                <label className="auth-checkbox">
+                                    <input type="checkbox" />
+                                    <span>Remember me</span>
+                                </label>
+                                <button type="button" className="auth-link-btn">Forgot Password?</button>
+                            </div>
 
+                            <button className="auth-submit-btn" type="submit">Login</button>
+                        </form>
 
+                        <div className="auth-footer-text">
+                            Don&apos;t have an account?
+                            <button className="auth-link-btn" type="button" onClick={() => navigate("/register")}>
+                                Register
+                            </button>
+                        </div>
                     </div>
                 </div>
+            </section>
 
-            </div>
+            <Footer />
         </>
-    )
+    );
 }

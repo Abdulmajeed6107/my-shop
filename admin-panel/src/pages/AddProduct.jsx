@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 
-const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Stollers & Scarves", "Suit", "Women", "Men", "Children"]; // adjust as needed
+const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Scarf", "Suit", "Women", "Men", "Children"]; // adjust as needed
 
 
 function AddProductPage() {

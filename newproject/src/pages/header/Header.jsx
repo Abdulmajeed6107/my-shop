@@ -16,7 +16,7 @@ export default function Header() {
             <div className="container-fluid px-2 px-md-4 px-lg-5 my-4">
                 <div className="row g-4">
                     <div className="col-lg-7 col-12">
-                        <div className="hero-card position-relative h-75">
+                        <div className="hero-card main-hero-banner position-relative">
                             {/* Background Image Layer */}
                             <div className="banner-image-wrapper">
                                 <img
@@ -63,11 +63,11 @@ export default function Header() {
                     <div className="col-lg-4 col-12 d-flex flex-column gap-4">
 
                         {/* Summer Sale Card */}
-                        <div className="hero-card position-relative flex-grow-1">
+                        <div className="hero-card promo-card-summer position-relative">
                             <img
                                 src="./images/BG 1.jpg"
                                 alt="Summer Sale Banner"
-                                className="hero-card-img w-100 h-100"
+                                className="hero-card-img"
                             />
                             <div className="promo-overlay-left-premium">
                                 <span className="premium-label-orange mb-1">Summer Sale</span>
@@ -86,7 +86,7 @@ export default function Header() {
                         </div>
 
                         {/* Best Deal Card */}
-                        <div className="hero-card position-relative flex-grow-1">
+                        <div className="hero-card promo-card-deal position-relative">
                             <img
                                 src="./images/BG 2.png"
                                 alt="Best Deal Banner"

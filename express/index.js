@@ -41,7 +41,7 @@ const io = new Server(server, {
       "http://localhost:5173",
       "http://localhost:5174",
       'https://my-shop-tawny-three.vercel.app/',
-      "https://bhatticlothing.store"
+      "https://bhatticlothing.store",
     ],
     methods: ["GET", "POST"],
     credentials: true

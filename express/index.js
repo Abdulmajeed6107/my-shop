@@ -40,7 +40,8 @@ const io = new Server(server, {
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      'https://my-shop-tawny-three.vercel.app/'
+      'https://my-shop-tawny-three.vercel.app/',
+      "https://bhatticlothing.store"
     ],
     methods: ["GET", "POST"],
     credentials: true

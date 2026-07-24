@@ -275,7 +275,7 @@ const CartSummary = () => {
                     </div>
 
                     {/* order summary div  */}
-                    <div className=" col-4 max-w-5xl mx-auto p-6">
+                    <div className=" col-lg-4 col-md-4 col-sm-6 max-w-5xl mx-auto p-6">
                         <h3 className="text-3xl font-bold mb-8">Order Summary</h3>
 
                         {cartItems.length === 0 ? (

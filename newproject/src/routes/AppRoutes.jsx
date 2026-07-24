@@ -12,7 +12,7 @@ import AboutUs from "../pages/about";
 import Profile from "../pages/profile/Profile";
 import Admin from "../pages/admin/Admin";
 import FavoritesPage from "../components/Favorites";
-import Policies from "../pages/policies/Policies";
+import Policies from '../pages/Policies/policies';
 import Contact from "../pages/contact/Contact";
 import Locator from '../pages/locator'
 // import ContactUs from "../components/ContactUs";

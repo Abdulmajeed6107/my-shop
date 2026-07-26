@@ -1,7 +1,7 @@
  
 //  app.get("/test-email",
 import express from 'express'
-import sendOrderConfirmationEmail from '../emailConfirmation.js';
+import {sendOrderConfirmationEmail} from '../emailConfirmation.js';
 
 const routes = express.Router();
 

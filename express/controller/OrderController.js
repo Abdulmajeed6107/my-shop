@@ -1,5 +1,6 @@
 import db from '../config/db.js';
 import { io } from "../index.js";
+import { sendOrderEmailByOrderId } from '../services/sendOrderEmailbyId.js';
 
 
 export const placeOrder = async (req, res) => {
@@ -30,7 +31,6 @@ export const placeOrder = async (req, res) => {
 
         const shipping_address_id = addressRows[0].id;
 
-
         // Step 2 — create order
         const paymentMethodMap = {
             "Cash on Delivery": "cod",
@@ -51,12 +51,6 @@ export const placeOrder = async (req, res) => {
         const orderId = order.insertId;
 
         // Step 3 — save order items
-
-        io.emit("newOrder", {
-            message: "New order received",
-            orderId: orderId
-        });
-
         for (const item of cartItems) {
             await conn.query(
                 'INSERT INTO order_items (order_id, product_id, quantity, price, total_price, color_id) VALUES (?, ?, ?, ?, ?, ?)',
@@ -77,6 +71,20 @@ export const placeOrder = async (req, res) => {
         );
 
         await conn.commit();
+
+        // Only after successful commit: notify + email
+        io.emit("newOrder", {
+            message: "New order received",
+            orderId: orderId
+        });
+
+        try {
+            await sendOrderEmailByOrderId(orderId);
+        } catch (err) {
+            console.error("Order email failed:", err);
+            // don't fail the request just because the email failed
+        }
+
         return res.json({ success: true, orderId });
 
     } catch (err) {

@@ -17,6 +17,7 @@ import { Server } from "socket.io";
 import colorRoutes from './routes/colorRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
+import testEmailRoutes from './routes/testEmailRoute.js'
 
 
 app.use(express.json());      
@@ -98,6 +99,7 @@ app.use('/api/dashboard', dashboardRoutes);
 
 app.use("/api/reviews", reviewRoutes);
 
+app.use("/api/mail", testEmailRoutes);
 
 
 // app.get('/api/products', (req, res) => {

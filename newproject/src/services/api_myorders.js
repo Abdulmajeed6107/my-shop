@@ -6,7 +6,8 @@ export const fetchMyOrders = async () => {
     const res = await fetch(`${API_URL}/api/orders/my-orders`, {
         headers: {
             Authorization: `Bearer ${token}`
-        }
+        },
+        cache: "no-store"
     });
 
     if (!res.ok) {

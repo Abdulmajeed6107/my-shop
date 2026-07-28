@@ -74,6 +74,8 @@ app.use('/api/cartitems', cartRoutes);
 
 app.use('/api/removeFromCart', cartRoutes);
 
+app.use('/api/orders', MyOrderRoutes);
+
 app.use('/api/orders', orderRoutes);
 
 app.use('/api', orderRoutes);
@@ -102,7 +104,6 @@ app.use("/api/reviews", reviewRoutes);
 
 app.use("/api/mail", testEmailRoutes);
 
-app.use('/api/orders', MyOrderRoutes);
 
 
 // app.get('/api/products', (req, res) => {

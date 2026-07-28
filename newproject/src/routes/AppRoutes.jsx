@@ -15,6 +15,7 @@ import FavoritesPage from "../components/Favorites";
 import Policies from '../pages/Policies/policies';
 import Contact from "../pages/contact/Contact";
 import Locator from '../pages/locator'
+import MyOrders from "../pages/MyOrders";
 // import ContactUs from "../components/ContactUs";
 // import AddToCart from "../pages/cart/addcart";
 
@@ -39,6 +40,7 @@ return(
     <Route path="/policies" element= {<Policies  />} />
     <Route path="/contact" element= {<Contact  />} />
     <Route path="/locator" element= {<Locator  />} />
+    <Route path="/my-orders" element= {<MyOrders  />} />
 
     
     {/* <Route path="/product/addtocart" element = {<AddToCart />} /> */}

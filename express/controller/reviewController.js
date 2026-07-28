@@ -1,7 +1,7 @@
 
 import db from '../config/db.js';
 
- export const createReview = async (req, res) => {
+export const createReview = async (req, res) => {
     try {
         const { product_id, user_id, rating, comment } = req.body;
 
@@ -20,6 +20,39 @@ import db from '../config/db.js';
             });
         }
 
+        const [purchased] = await db.query(
+            `SELECT oi.id
+     FROM orders o
+     JOIN order_items oi ON o.id = oi.order_id
+     WHERE o.user_id = ?
+       AND oi.product_id = ?
+       AND o.status = 'delivered'
+     LIMIT 1`,
+            [user_id, product_id]
+        );
+
+        if (purchased.length === 0) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only review products you have purchased."
+            });
+        }
+
+        const [existing] = await db.query(
+            `SELECT id
+     FROM reviews
+     WHERE product_id = ?
+       AND user_id = ?`,
+            [product_id, user_id]
+        );
+
+        if (existing.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: "You have already reviewed this product."
+            });
+        }
+        
         await db.query(
             `INSERT INTO reviews (product_id, user_id, rating, comment)
              VALUES (?, ?, ?, ?)`,

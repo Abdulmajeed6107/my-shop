@@ -13,7 +13,7 @@ const MyNavbar = () => {
                     <div className="navbar-nav d-flex navspace gap-3 w-100">
                         <Link className="nav-link text-white" to="/">Home</Link>
                         <Link className="nav-link text-white" to="/products">Shop</Link>
-                        <Link className="nav-link text-white" to="/pages">Pages</Link>
+                        <Link className='nav-link text-white' to="/my-orders">My Orders</Link>
                         <Link className="nav-link text-white" to="/blog">Blog</Link>
                         <Link className="nav-link text-white" to="/about">About Us</Link>
                         <Link className="nav-link text-white" to="/contact">Contact Us</Link>

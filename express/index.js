@@ -21,13 +21,13 @@ import testEmailRoutes from './routes/testEmailRoute.js'
 import MyOrderRoutes from './routes/MyOrderRoutes.js'
 
 
-app.use(express.json());      
+app.use(express.json());
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")
-  : ["http://localhost:5173", "http://localhost:5174","https://bhatticlothing.store",];
+  : ["http://localhost:5173", "http://localhost:5174", "https://bhatticlothing.store",];
 
-  console.log("Allowed origins:", allowedOrigins);
+console.log("Allowed origins:", allowedOrigins);
 
 app.use(cors({
   origin: allowedOrigins,
@@ -154,14 +154,24 @@ app.post('/api/user/register', async (req, res) => {
 
     // insert user
     const insertSql = `
-      INSERT INTO users 
-      (email, firstname, lastname, username, phonenumber, password, adress, postalcode, role)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)
-    `;
+  INSERT INTO users 
+  (email, firstname, lastname, username, phonenumber, password, adress, postalcode, role)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
 
     const [newUser] = await db.query(
       insertSql,
-      [email, firstname, lastname, username, phonenumber, hashedPassword, adress, postalcode, "user"]
+      [
+        email,
+        firstname,
+        lastname,
+        username,
+        phonenumber,
+        hashedPassword,
+        adress || null,
+        postalcode || null,
+        "user"
+      ]
     );
 
     const userId = newUser.insertId;
@@ -189,16 +199,16 @@ app.post('/api/user/register', async (req, res) => {
       token: token
     })
 
-    res.json({
-      status: true,
-      message: "User registered successfully!"
-    });
+    // res.json({
+    //   status: true,
+    //   message: "User registered successfully!"
+    // });
 
   } catch (err) {
     console.error("Registration error:", err);
     res.json({
       status: false,
-      message: "Registration failed!"
+      message: err.sqlMessage || err.message || "Registration failed!"
     });
   }
 

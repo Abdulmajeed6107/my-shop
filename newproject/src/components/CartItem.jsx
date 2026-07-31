@@ -146,7 +146,7 @@ const Cart = () => {
             {cartItems.length > 0 && (
                 <>
                     <div className="text-3xl font-bold text-right mt-8">
-                        Total: ${total.toFixed(2)}
+                        Total: Rs.{total.toFixed(2)}
                     </div>
 
                     {/* MAP ADDED HERE */}

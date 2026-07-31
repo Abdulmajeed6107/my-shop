@@ -118,7 +118,7 @@ const Cart = () => {
                             />
                             <div>
                                 <h4>{item.name}</h4>
-                                <p>${item.price} × {item.quantity}</p>
+                                <p>RKR{item.price} × {item.quantity}</p>
                                 {item.color_name && (
                                     <div className="d-flex align-items-center gap-1">
                                         <div style={{

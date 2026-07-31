@@ -300,7 +300,7 @@ const CartSummary = () => {
                                                     <small className="text-muted">{item.color_name}</small>
                                                 </div>
                                             )}
-                                            <p>${item.price} × {item.quantity}</p>
+                                            <p>Rs.{item.price} × {item.quantity}</p>
                                         </div>
                                     </div>
                                 ))}

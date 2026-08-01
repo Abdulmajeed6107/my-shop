@@ -44,7 +44,7 @@ export default function FavoritesPage() {
                                         <h6 className="card-title mb-2">{item.name}</h6>
 
                                         <p className="text-success fw-bold mb-3">
-                                            ${item.price}
+                                            Rs.{item.price}
                                         </p>
 
                                         <div className="mt-auto d-grid gap-2">

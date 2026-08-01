@@ -136,7 +136,7 @@ const Cart = () => {
 
                         <div>
 
-                            <p className="text-xl font-bold">${(item.price * item.quantity).toFixed(2)}</p>
+                            <p className="text-xl font-bold">Rs.{(item.price * item.quantity).toFixed(2)}</p>
                             <button onClick={() => removeItem(item.id)} className="text-red-600">Remove</button>
                         </div>
                     </div>

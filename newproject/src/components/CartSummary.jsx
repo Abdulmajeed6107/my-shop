@@ -267,7 +267,7 @@ const CartSummary = () => {
                         </div>
 
                         <button
-                            className="bg-success px-8 py-3 rounded-lg mt-6 w-100 text-white"
+                            className="bg-success px-8 py-3 rounded-lg mt-6 text-white"
                             onClick={handlePlaceOrder}
                         >
                             Place Order
@@ -301,7 +301,7 @@ const CartSummary = () => {
                                                 </div>
                                             )}
                                             <p>Rs.{item.price} × {item.quantity}</p>
-                                            <p>{item.sku}</p>
+                                            <p>{item.image}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -310,6 +310,7 @@ const CartSummary = () => {
                                 </div>
                                 <p className="mt-2">Shipping: Rs. 250</p>
                                 <p>Discount: Rs. 0</p>
+                                <hr />
                                 <div className="fw-bold mt-5">
                                     Total: Rs.{(total + 250).toFixed(2)}
                                 </div>

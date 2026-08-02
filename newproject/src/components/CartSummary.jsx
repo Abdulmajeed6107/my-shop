@@ -308,14 +308,15 @@ const CartSummary = () => {
                                 <div className="text-3xl font-bold text-right mt-8">
                                     Subtotal: Rs.{total.toFixed(2)}
                                 </div>
-                                <p>Shipping: Rs. 250</p>
+                                <p className="mt-5">Shipping: Rs. 250</p>
                                 <p>Discount: Rs. 0</p>
-                                <div className="text-3xl font-bold text-right mt-8">
+                                <div className="fw-bold mt-5 mb-3">
                                     Total: Rs.{(total + 250).toFixed(2)}
                                 </div>
+                                <hr />
 
                                 <button
-                                    className="bg-green-600 px-8 py-3 rounded-lg mt-6 w-full"
+                                    className="bg-success px-8 py-3 rounded-lg mt-5 w-100 text-white"
                                     onClick={handlePlaceOrder}
                                 >
                                     Place Order

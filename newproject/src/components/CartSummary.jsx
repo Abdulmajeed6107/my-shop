@@ -282,27 +282,44 @@ const CartSummary = () => {
                             <p>Your cart is empty.</p>
                         ) : (
                             <div>
-                                {cartItems.map(item => (
-                                    <div key={item.id} className="flex justify-between items-center border p-4 mb-4 rounded-lg">
-                                        <div>
+                                {cartItems.map((item) => (
+                                    <div
+                                        key={item.id}
+                                        className="d-flex align-items-center border rounded p-3 mb-3"
+                                    >
+                                        {/* Product Image */}
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            style={{
+                                                width: "100px",
+                                                height: "100px",
+                                                objectFit: "cover",
+                                                borderRadius: "8px",
+                                            }}
+                                        />
 
-                                            <h4>{item.name}</h4>
-                                            {/* 👇 show color if exists */}
+                                        {/* Product Details */}
+                                        <div className="ms-3">
+                                            <h5 className="mb-1">{item.name}</h5>
+
                                             {item.color_name && (
-                                                <div className="d-flex align-items-center gap-2 my-1">
-                                                    <div style={{
-                                                        width: 16,
-                                                        height: 16,
-                                                        borderRadius: "50%",
-                                                        backgroundColor: item.hex_code,
-                                                        border: "1px solid #ccc"
-                                                    }} />
-                                                    <small className="text-muted">{item.color_name}</small>
+                                                <div className="d-flex align-items-center gap-2 mb-2">
+                                                    <div
+                                                        style={{
+                                                            width: 16,
+                                                            height: 16,
+                                                            borderRadius: "50%",
+                                                            backgroundColor: item.hex_code,
+                                                            border: "1px solid #ccc",
+                                                        }}
+                                                    />
+                                                    <small>{item.color_name}</small>
                                                 </div>
                                             )}
-                                            <p>Rs.{item.price} × {item.quantity}</p>
-                                            <p>Qty: {item.quantity}</p>
-                                            <img src={item.image} alt={item.name} className="w-24 h-24 object-cover" />
+
+                                            <p className="mb-1">Price: Rs.{item.price}</p>
+                                            <p className="mb-0">Quantity: {item.quantity}</p>
                                         </div>
                                     </div>
                                 ))}

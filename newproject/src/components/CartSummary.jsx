@@ -301,7 +301,8 @@ const CartSummary = () => {
                                                 </div>
                                             )}
                                             <p>Rs.{item.price} × {item.quantity}</p>
-                                            <p>{item.image}</p>
+                                            <p>Qty: {item.quantity}</p>
+                                            <img src={item.image} alt={item.name} className="w-24 h-24 object-cover" />
                                         </div>
                                     </div>
                                 ))}

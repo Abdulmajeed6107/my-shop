@@ -189,7 +189,7 @@ export default function Header() {
                     </div>
                     <div className="col-6 col-md-3">
                         <div className="category-card shadow-sm border-0 rounded-3 overflow-hidden position-relative" onClick={() => navigate('/products?season=winter')} style={{ height: '220px', cursor: 'pointer' }}>
-                            <img src="./images/Bg4 .jpeg" alt="Winter Collection" className="category-card-img w-100 h-100" style={{ objectFit: 'cover', transition: 'transform 0.5s' }} />
+                            <img src="./images/Bg4.jpeg" alt="Winter Collection" className="category-card-img w-100 h-100" style={{ objectFit: 'cover', transition: 'transform 0.5s' }} />
                             <div className="category-overlay position-absolute bottom-0 start-0 w-100 p-3 text-white d-flex flex-column justify-content-end bg-gradient-dark">
                                 <h4 className="fw-bold mb-0 fs-5 text-white">Winter Collection</h4>
                                 <span className="small-link text-uppercase text-teal-accent fw-bold mt-1" style={{ fontSize: '0.8rem', color: '#20b2aa' }}>

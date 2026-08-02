@@ -11,7 +11,7 @@ export const fetchMyOrders = async () => {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to fetch orders");
+        throw new Error("Something Went wrong orders");
     }
 
     return res.json();

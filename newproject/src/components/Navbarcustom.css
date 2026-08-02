@@ -7,3 +7,26 @@
 .navbar-toggler {
   border-color: white;
 }
+
+/* Hover dropdown logic for premium feel */
+@media (min-width: 992px) {
+  .nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .nav-item.dropdown .dropdown-menu {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  }
+}
+
+.dropdown-item:hover {
+  background-color: #20b2aa !important;
+  color: white !important;
+}

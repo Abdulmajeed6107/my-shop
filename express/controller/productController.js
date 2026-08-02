@@ -1,32 +1,79 @@
 
 import db from "../config/db.js";
 
-// get all products api 
 export const GetAllProducts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const all = req.query.all === "true";
     const limit = parseInt(req.query.limit) || 12;
     const offset = (page - 1) * limit;
+    const category = req.query.category || "";
+    const search = req.query.search || "";
+    const season = req.query.season || "";
+
+    let whereConditions = ["is_active = 1"];
+    let queryParams = [];
+
+    // Category filter
+    if (category && category !== "All") {
+      if (category.toLowerCase() === "dupatta" || category.toLowerCase() === "dupattas") {
+        whereConditions.push("(category LIKE ? OR category LIKE ?)");
+        queryParams.push("%dupatta%");
+        queryParams.push("%dupattas%");
+      } else {
+        whereConditions.push("category = ?");
+        queryParams.push(category);
+      }
+    }
+
+    // Search filter
+    if (search) {
+      whereConditions.push("(name LIKE ? OR description LIKE ? OR category LIKE ?)");
+      queryParams.push(`%${search}%`);
+      queryParams.push(`%${search}%`);
+      queryParams.push(`%${search}%`);
+    }
+
+    // Season filter
+    if (season) {
+      if (season.toLowerCase() === "summer") {
+        whereConditions.push(
+          "(category LIKE '%summer%' OR name LIKE '%lawn%' OR name LIKE '%cotton%' OR name LIKE '%summer%' OR name LIKE '%doria%' OR description LIKE '%lawn%' OR description LIKE '%cotton%')"
+        );
+      } else if (season.toLowerCase() === "winter") {
+        whereConditions.push(
+          "(category LIKE '%winter%' OR name LIKE '%khaddar%' OR name LIKE '%wool%' OR name LIKE '%velvet%' OR name LIKE '%karandi%' OR name LIKE '%winter%' OR description LIKE '%khaddar%' OR description LIKE '%wool%' OR description LIKE '%velvet%')"
+        );
+      }
+    }
+
+    const whereClause = whereConditions.length > 0 ? "WHERE " + whereConditions.join(" AND ") : "";
 
     // 1. Get total count for pagination
     const [countResult] = await db.query(
-      "SELECT COUNT(*) AS total FROM products WHERE is_active = 1"
+      `SELECT COUNT(*) AS total FROM products ${whereClause}`,
+      queryParams
     );
     const totalProducts = countResult[0].total;
     const totalPages = all ? 1 : Math.ceil(totalProducts / limit);
 
     // 2. Get products — full list if `all=true`, otherwise paginated
-    const [result] = all
-      ? await db.query(
-        "SELECT * FROM products WHERE is_active = 1 ORDER BY created_at DESC"
-      )
-      : await db.query(
-        "SELECT * FROM products WHERE is_active = 1 ORDER BY created_at DESC LIMIT ? OFFSET ?",
-        [limit, offset]
-      );
+    let sql = `SELECT * FROM products ${whereClause} ORDER BY created_at DESC`;
+    if (!all) {
+      sql += " LIMIT ? OFFSET ?";
+      queryParams.push(limit);
+      queryParams.push(offset);
+    }
 
-    // 3. Transform image URLs
+    const [result] = await db.query(sql, queryParams);
+
+    // 3. Get all unique active categories from database for the filter bar
+    const [categoryRows] = await db.query(
+      "SELECT DISTINCT category FROM products WHERE is_active = 1 AND category IS NOT NULL AND category != ''"
+    );
+    const categories = categoryRows.map(row => row.category);
+
+    // 4. Transform image URLs
     const products = result.map(product => {
       let imageUrl = null;
 
@@ -52,6 +99,7 @@ export const GetAllProducts = async (req, res) => {
     res.json({
       status: true,
       products,
+      categories,
       pagination: {
         currentPage: all ? 1 : page,
         totalPages,

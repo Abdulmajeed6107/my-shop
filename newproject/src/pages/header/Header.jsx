@@ -115,7 +115,7 @@ export default function Header() {
                         {/* Best Deal Card */}
                         <div className="hero-card promo-card-deal position-relative rounded-4 overflow-hidden" style={{ cursor: 'pointer' }} onClick={() => navigate('/products?season=summer&category=Suit')}>
                             <img
-                                src="./images/BG 2.png"
+                                src="./images/bestdeal.jpg"
                                 alt="Best Deal Banner"
                                 className="hero-card-img w-100 h-100"
                                 style={{ objectFit: 'cover' }}

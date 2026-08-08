@@ -50,21 +50,17 @@ const MyOrders = () => {
                                         borderRadius: "4px",
                                     }}
                                 />
-
-                                <div className="flex-grow-1">
-                                    <div className="fw-semibold">{item.product_name}</div>
-                                    {item.color_name && (
-                                        <div className="text-muted small">{item.color_name}</div>
-                                    )}
-                                    <div className="small">
-                                        Qty: {item.quantity} &nbsp;|&nbsp; Rs. {item.price}
-                                    </div>
-                                    <div className="text-muted small">ID: {item.product_id}</div>
+                                <div>
+                                    <span className="text-muted me-2">#{item.product_id}</span>
+                                    <strong>{item.product_name}</strong>
+                                    {item.color_name && <span> ({item.color_name})</span>}
+                                    <span className="ms-2">— Qty: {item.quantity}</span>
+                                    <span className="ms-2">— Rs. {item.price}</span>
                                 </div>
 
                                 {order.status === "delivered" && (
                                     <button
-                                        className="btn btn-sm btn-outline-primary"
+                                        className="btn btn-sm btn-outline-primary ms-auto"
                                         onClick={() =>
                                             navigate(`/product/productDetail/${item.product_id}?review=true`)
                                         }

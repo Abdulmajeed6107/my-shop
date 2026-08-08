@@ -6,6 +6,7 @@ import { useCart } from "../../../hooks/useCart";
 import TopHeader from "../../../components/TopHeader";
 import MyNavbar from "../../../components/Navbarcustom";
 import axios from 'axios';
+import { useParams, useSearchParams } from "react-router-dom";
 
 export default function ProductDetail({ productId }) {
 
@@ -24,7 +25,67 @@ export default function ProductDetail({ productId }) {
   const [activeTab, setActiveTab] = useState("info"); // "info" | "colors"
   const { id } = useParams();
   const { cartItems, loading, fetchCartItems } = useCart();
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [canReview, setCanReview] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false);
+  const [reviewMessage, setReviewMessage] = useState("");
+  const [searchParams] = useSearchParams();
+  const reviewRequested = searchParams.get("review") === "true";
 
+  const handleSubmitReview = async () => {
+
+    if (rating === 0) {
+      setReviewMessage("Please select a rating.");
+      return;
+    }
+
+    if (!comment.trim()) {
+      setReviewMessage("Please write a review.");
+      return;
+    }
+
+    try {
+
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      const response = await fetch(
+        `${API_URL}/api/reviews`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            product_id: id,
+            user_id: user.id,
+            rating: rating,
+            comment: comment
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setReviewMessage(data.message);
+        return;
+      }
+
+      setReviewMessage("Review added successfully!");
+
+      setRating(0);
+      setComment("");
+
+      // Refresh reviews
+      fetchReviews();
+
+    } catch (error) {
+      console.error("Review error:", error);
+      setReviewMessage("Something went wrong.");
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -284,6 +345,55 @@ export default function ProductDetail({ productId }) {
                 </button>
 
               </div>
+              ```jsx
+              {reviewRequested && (
+                <div className="border rounded p-4 mb-4">
+
+                  <h4>Write a Review</h4>
+
+                  <div className="mb-3">
+                    <label className="form-label">Rating</label>
+
+                    <select
+                      className="form-select"
+                      value={rating}
+                      onChange={(e) => setRating(Number(e.target.value))}
+                    >
+                      <option value="0">Select rating</option>
+                      <option value="5">⭐⭐⭐⭐⭐ 5</option>
+                      <option value="4">⭐⭐⭐⭐ 4</option>
+                      <option value="3">⭐⭐⭐ 3</option>
+                      <option value="2">⭐⭐ 2</option>
+                      <option value="1">⭐ 1</option>
+                    </select>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Your Review</label>
+
+                    <textarea
+                      className="form-control"
+                      rows="4"
+                      placeholder="Write your review..."
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                  </div>
+
+                  <button
+                    className="btn btn-primary"
+                    onClick={handleSubmitReview}
+                  >
+                    Submit Review
+                  </button>
+
+                </div>
+              )}
+              ```
+
+
+              {/* here start reviews section for view only  */}
+
               <h3 className="mt-5">Customer Reviews</h3>
 
               {reviews.length === 0 ? (
@@ -301,8 +411,8 @@ export default function ProductDetail({ productId }) {
                         <i
                           key={i}
                           className={`bi ${i < review.rating
-                              ? "bi-star-fill"
-                              : "bi-star"
+                            ? "bi-star-fill"
+                            : "bi-star"
                             }`}
                         />
                       ))}

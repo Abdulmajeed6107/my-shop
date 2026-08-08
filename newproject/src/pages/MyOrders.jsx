@@ -40,18 +40,28 @@ const MyOrders = () => {
                                 {item.product_id}
                                 {item.product_name} {item.color_name ? `(${item.color_name})` : ""} —
                                 Qty: {item.quantity} — Rs. {item.price}
-                                <img src={item.image} alt="order image"
+                                <img src={item.image} alt="order" className="ps-3"
                                     style={{ width: "60px", height: "60px", objectFit: "cover", borderRadius: "4px" }}
                                 />
-
+                                {order.status === "delivered" && (
+                                    <button
+                                        onClick={() =>
+                                            navigate(`/product/productDetail/${product.product_id}?review=true`)
+                                        }
+                                    >
+                                        Review Product
+                                    </button>
+                                )}
                             </li>
 
                         ))}
                     </ul>
 
                     <p><strong>Total: Rs. {order.final_amount}</strong></p>
+
                 </div>
             ))}
+
         </div>
     );
 };

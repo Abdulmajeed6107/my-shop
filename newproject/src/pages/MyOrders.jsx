@@ -40,7 +40,9 @@ const MyOrders = () => {
                                 {item.id}
                                 {item.product_name} {item.color_name ? `(${item.color_name})` : ""} —
                                 Qty: {item.quantity} — Rs. {item.price}
-                                <img src={item.image} alt="order image" />
+                                <img src={item.image} alt="order image"
+                                    style={{ width: "60px", height: "60px", objectFit: "cover", borderRadius: "4px" }}
+                                />
 
                             </li>
 

@@ -37,9 +37,13 @@ const MyOrders = () => {
                     <ul>
                         {order.items.map((item, idx) => (
                             <li key={idx}>
-                                {item.product_name} {item.color_name ? `(${item.color_name})` : ""} — 
+                                {item.id}
+                                {item.product_name} {item.color_name ? `(${item.color_name})` : ""} —
                                 Qty: {item.quantity} — Rs. {item.price}
+                                <img src={item.image} alt="order image" />
+
                             </li>
+
                         ))}
                     </ul>
 

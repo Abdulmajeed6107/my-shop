@@ -32,9 +32,12 @@ const MyOrders = () => {
     console.log(order.status, JSON.stringify(order.status), item.is_reviewed);
 
     return (
+        <>
+        <MyNavbar />
+        <TopHeader />
+
         <div>
-            <TopHeader />
-            <MyNavbar />
+           
             <h2>My Orders</h2>
             {orders.map((order) => (
                 <div key={order.order_id} style={{ border: "1px solid #ddd", padding: "16px", marginBottom: "16px" }}>
@@ -91,6 +94,7 @@ const MyOrders = () => {
                 </div>
             ))}
         </div>
+        </>
     );
 };
 

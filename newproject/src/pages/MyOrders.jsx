@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchMyOrders } from "../services/api_myorders";
+import MyNavbar from "../components/MyNavbar";
+import TopHeader from "../components/TopHeader";
 
 const MyOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -31,6 +33,8 @@ const MyOrders = () => {
 
     return (
         <div>
+            <TopHeader />
+            <MyNavbar />
             <h2>My Orders</h2>
             {orders.map((order) => (
                 <div key={order.order_id} style={{ border: "1px solid #ddd", padding: "16px", marginBottom: "16px" }}>

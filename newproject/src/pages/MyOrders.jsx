@@ -8,6 +8,7 @@ const MyOrders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,75 +26,135 @@ const MyOrders = () => {
         loadOrders();
     }, []);
 
-    if (loading) return <p>Loading your orders...</p>;
-    if (error) return <p>Error: {error}</p>;
-    if (orders.length === 0) return <p>You haven't placed any orders yet.</p>;
-
-    console.log(order.status, JSON.stringify(order.status), item.is_reviewed);
-
     return (
         <>
-        <MyNavbar />
-        <TopHeader />
+            <MyNavbar />
+            <TopHeader />
 
-        <div>
-           
-            <h2>My Orders</h2>
-            {orders.map((order) => (
-                <div key={order.order_id} style={{ border: "1px solid #ddd", padding: "16px", marginBottom: "16px" }}>
-                    <h3>Order #{order.order_number}</h3>
-                    <p>Status: {order.status}</p>
-                    <p>Placed on: {new Date(order.created_at).toLocaleDateString()}</p>
+            <div className="container py-4">
 
-                    <ul className="list-unstyled">
-                        {order.items.map((item, idx) => (
-                            <li
-                                key={idx}
-                                className="d-flex align-items-center gap-3 border-bottom py-3"
+                {loading && (
+                    <p>Loading your orders...</p>
+                )}
+
+                {error && (
+                    <p className="text-danger">
+                        Error: {error}
+                    </p>
+                )}
+
+                {!loading && !error && orders.length === 0 && (
+                    <p>You haven't placed any orders yet.</p>
+                )}
+
+                {!loading && !error && orders.length > 0 && (
+                    <>
+                        <h2 className="mb-4">My Orders</h2>
+
+                        {orders.map((order) => (
+                            <div
+                                key={order.order_id}
+                                style={{
+                                    border: "1px solid #ddd",
+                                    padding: "16px",
+                                    marginBottom: "16px"
+                                }}
                             >
-                                <img
-                                    src={item.image}
-                                    alt="order"
-                                    style={{
-                                        width: "60px",
-                                        height: "60px",
-                                        objectFit: "cover",
-                                        borderRadius: "4px",
-                                    }}
-                                />
-                                <div className="flex-grow-1">
-                                    <span className="text-muted me-2">#{item.product_id}</span>
-                                    <strong>{item.product_name}</strong>
-                                    {item.color_name && <span> ({item.color_name})</span>}
-                                    <span className="ms-2">— Qty: {item.quantity}</span>
-                                    <span className="ms-2">— Rs. {item.price}</span>
-                                </div>
+                                <h3>Order #{order.order_number}</h3>
 
-                                {order.status?.trim().toLowerCase() === "delivered" && (
-                                    item.is_reviewed ? (
-                                        <span className="text-success small ms-auto">
-                                            ✓ Reviewed
-                                            {item.review?.rating && ` (${item.review.rating}★)`}
-                                        </span>
-                                    ) : (
-                                        <button
-                                            className="btn btn-sm btn-outline-primary ms-auto"
-                                            onClick={() =>
-                                                navigate(`/product/productDetail/${item.product_id}?review=true`)
-                                            }
+                                <p>
+                                    Status: {order.status}
+                                </p>
+
+                                <p>
+                                    Placed on:{" "}
+                                    {new Date(
+                                        order.created_at
+                                    ).toLocaleDateString()}
+                                </p>
+
+                                <ul className="list-unstyled">
+
+                                    {order.items.map((item, idx) => (
+                                        <li
+                                            key={idx}
+                                            className="d-flex align-items-center gap-3 border-bottom py-3"
                                         >
-                                            Review Product
-                                        </button>
-                                    )
-                                )}
-                            </li>
-                        ))}
-                    </ul>
+                                            <img
+                                                src={item.image}
+                                                alt={item.product_name}
+                                                style={{
+                                                    width: "60px",
+                                                    height: "60px",
+                                                    objectFit: "cover",
+                                                    borderRadius: "4px"
+                                                }}
+                                            />
 
-                    <p><strong>Total: Rs. {order.final_amount}</strong></p>
-                </div>
-            ))}
-        </div>
+                                            <div className="flex-grow-1">
+                                                <span className="text-muted me-2">
+                                                    #{item.product_id}
+                                                </span>
+
+                                                <strong>
+                                                    {item.product_name}
+                                                </strong>
+
+                                                {item.color_name && (
+                                                    <span>
+                                                        {" "}
+                                                        ({item.color_name})
+                                                    </span>
+                                                )}
+
+                                                <span className="ms-2">
+                                                    — Qty: {item.quantity}
+                                                </span>
+
+                                                <span className="ms-2">
+                                                    — Rs. {item.price}
+                                                </span>
+                                            </div>
+
+                                            {order.status
+                                                ?.trim()
+                                                .toLowerCase() === "delivered" && (
+
+                                                item.is_reviewed ? (
+                                                    <span className="text-success small ms-auto">
+                                                        ✓ Reviewed
+
+                                                        {item.review?.rating &&
+                                                            ` (${item.review.rating}★)`}
+                                                    </span>
+                                                ) : (
+                                                    <button
+                                                        className="btn btn-sm btn-outline-primary ms-auto"
+                                                        onClick={() =>
+                                                            navigate(
+                                                                `/product/productDetail/${item.product_id}?review=true`
+                                                            )
+                                                        }
+                                                    >
+                                                        Review Product
+                                                    </button>
+                                                )
+                                            )}
+                                        </li>
+                                    ))}
+
+                                </ul>
+
+                                <p>
+                                    <strong>
+                                        Total: Rs. {order.final_amount}
+                                    </strong>
+                                </p>
+                            </div>
+                        ))}
+                    </>
+                )}
+            </div>
         </>
     );
 };

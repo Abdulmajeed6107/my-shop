@@ -28,8 +28,8 @@ const MyOrders = () => {
 
     return (
         <>
-            <MyNavbar />
             <TopHeader />
+            <MyNavbar />
 
             <div className="container py-4">
 
@@ -120,26 +120,26 @@ const MyOrders = () => {
                                                 ?.trim()
                                                 .toLowerCase() === "delivered" && (
 
-                                                item.is_reviewed ? (
-                                                    <span className="text-success small ms-auto">
-                                                        ✓ Reviewed
+                                                    item.is_reviewed ? (
+                                                        <span className="text-success small ms-auto">
+                                                            ✓ Reviewed
 
-                                                        {item.review?.rating &&
-                                                            ` (${item.review.rating}★)`}
-                                                    </span>
-                                                ) : (
-                                                    <button
-                                                        className="btn btn-sm btn-outline-primary ms-auto"
-                                                        onClick={() =>
-                                                            navigate(
-                                                                `/product/productDetail/${item.product_id}?review=true`
-                                                            )
-                                                        }
-                                                    >
-                                                        Review Product
-                                                    </button>
-                                                )
-                                            )}
+                                                            {item.review?.rating &&
+                                                                ` (${item.review.rating}★)`}
+                                                        </span>
+                                                    ) : (
+                                                        <button
+                                                            className="btn btn-sm btn-outline-primary ms-auto"
+                                                            onClick={() =>
+                                                                navigate(
+                                                                    `/product/productDetail/${item.product_id}?review=true`
+                                                                )
+                                                            }
+                                                        >
+                                                            Review Product
+                                                        </button>
+                                                    )
+                                                )}
                                         </li>
                                     ))}
 

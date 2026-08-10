@@ -27,6 +27,8 @@ const MyOrders = () => {
     if (error) return <p>Error: {error}</p>;
     if (orders.length === 0) return <p>You haven't placed any orders yet.</p>;
 
+    console.log(order.status, JSON.stringify(order.status), item.is_reviewed);
+
     return (
         <div>
             <h2>My Orders</h2>
@@ -60,7 +62,7 @@ const MyOrders = () => {
                                     <span className="ms-2">— Rs. {item.price}</span>
                                 </div>
 
-                                {order.status === "delivered" && (
+                                {order.status?.trim().toLowerCase() === "delivered" && (
                                     item.is_reviewed ? (
                                         <span className="text-success small ms-auto">
                                             ✓ Reviewed

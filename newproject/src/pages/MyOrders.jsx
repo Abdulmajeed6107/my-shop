@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchMyOrders } from "../services/api_myorders";
 
 const MyOrders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadOrders = async () => {
@@ -50,7 +52,7 @@ const MyOrders = () => {
                                         borderRadius: "4px",
                                     }}
                                 />
-                                <div>
+                                <div className="flex-grow-1">
                                     <span className="text-muted me-2">#{item.product_id}</span>
                                     <strong>{item.product_name}</strong>
                                     {item.color_name && <span> ({item.color_name})</span>}
@@ -59,24 +61,29 @@ const MyOrders = () => {
                                 </div>
 
                                 {order.status === "delivered" && (
-                                    <button
-                                        className="btn btn-sm btn-outline-primary ms-auto"
-                                        onClick={() =>
-                                            navigate(`/product/productDetail/${item.product_id}?review=true`)
-                                        }
-                                    >
-                                        Review Product
-                                    </button>
+                                    item.is_reviewed ? (
+                                        <span className="text-success small ms-auto">
+                                            ✓ Reviewed
+                                            {item.review?.rating && ` (${item.review.rating}★)`}
+                                        </span>
+                                    ) : (
+                                        <button
+                                            className="btn btn-sm btn-outline-primary ms-auto"
+                                            onClick={() =>
+                                                navigate(`/product/productDetail/${item.product_id}?review=true`)
+                                            }
+                                        >
+                                            Review Product
+                                        </button>
+                                    )
                                 )}
                             </li>
                         ))}
                     </ul>
 
                     <p><strong>Total: Rs. {order.final_amount}</strong></p>
-
                 </div>
             ))}
-
         </div>
     );
 };

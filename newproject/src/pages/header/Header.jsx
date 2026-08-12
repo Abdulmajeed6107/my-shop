@@ -3,18 +3,21 @@ import TopHeader from '../../components/TopHeader';
 import './Header.css';
 import Footer from '../../components/Footer';
 import BootomPage from '../../components/BootomPage';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useNavigationProgress } from '../../components/NavigationProgress';
+import { API_URL } from '../../config/api';
 
 export default function Header() {
     const navigate = useNavigate();
+    const { completeNavigation } = useNavigationProgress();
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [loadingProducts, setLoadingProducts] = useState(true);
 
     useEffect(() => {
         const fetchFeatured = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products?limit=8`);
+                const response = await fetch(`${API_URL}/api/products?limit=8`);
                 const data = await response.json();
                 if (data && data.status) {
                     setFeaturedProducts(data.products || []);
@@ -27,6 +30,12 @@ export default function Header() {
         };
         fetchFeatured();
     }, []);
+
+    useEffect(() => {
+        if (!loadingProducts) {
+            completeNavigation();
+        }
+    }, [loadingProducts, completeNavigation]);
 
     return (
         <>

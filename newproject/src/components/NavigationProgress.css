@@ -1,0 +1,17 @@
+.navigation-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 9999;
+  background: transparent;
+  pointer-events: none;
+}
+
+.navigation-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #20b2aa, #17a2b8);
+  box-shadow: 0 0 8px rgba(32, 178, 170, 0.6);
+  transition: width 0.25s ease;
+}

@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import { buildImageUrl } from '../utils/ImageHelper.js';
 
 // GET /api/orders/my-orders
 export const getMyOrders = async (req, res) => {
@@ -47,10 +48,34 @@ export const getMyOrders = async (req, res) => {
             [orderIds]
         );
 
+        const productIds = [...new Set(items.map(item => item.product_id))];
+        const [reviews] = productIds.length
+            ? await db.query(
+                `SELECT product_id, rating, comment
+                 FROM reviews
+                 WHERE user_id = ? AND product_id IN (?)`,
+                [user_id, productIds]
+            )
+            : [[]];
+
+        const reviewMap = new Map(
+            reviews.map(review => [review.product_id, review])
+        );
+
         // Step 3 — group items under their respective order
         const ordersWithItems = orders.map(order => ({
             ...order,
-            items: items.filter(item => item.order_id === order.order_id)
+            items: items
+                .filter(item => item.order_id === order.order_id)
+                .map(item => {
+                    const review = reviewMap.get(item.product_id);
+                    return {
+                        ...item,
+                        image: buildImageUrl(item.image),
+                        is_reviewed: Boolean(review),
+                        review: review || null,
+                    };
+                }),
         }));
 
         res.json({ success: true, orders: ordersWithItems });

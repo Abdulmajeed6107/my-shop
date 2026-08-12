@@ -1,18 +1,27 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import { API_URL } from "../config/api";
 
 export const fetchMyOrders = async () => {
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
-    const res = await fetch(`${API_URL}/api/orders/my-orders`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-        cache: "no-store"
-    });
+  if (!token) {
+    throw new Error("Please log in to view your orders.");
+  }
 
-    if (!res.ok) {
-        throw new Error("Something Went wrong orders");
-    }
+  const res = await fetch(`${API_URL}/api/orders/my-orders`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: "no-store",
+  });
 
-    return res.json();
+  if (res.status === 401) {
+    throw new Error("Session expired. Please log in again.");
+  }
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.message || "Failed to load your orders.");
+  }
+
+  return res.json();
 };

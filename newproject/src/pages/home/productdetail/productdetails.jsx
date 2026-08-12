@@ -6,7 +6,8 @@ import { useCart } from "../../../hooks/useCart";
 import TopHeader from "../../../components/TopHeader";
 import MyNavbar from "../../../components/Navbarcustom";
 import axios from 'axios';
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { API_URL } from "../../../config/api";
 
 export default function ProductDetail({ productId }) {
 
@@ -35,7 +36,6 @@ export default function ProductDetail({ productId }) {
   const reviewRequested = searchParams.get("review") === "true";
 
   const handleSubmitReview = async () => {
-
     if (rating === 0) {
       setReviewMessage("Please select a rating.");
       return;
@@ -46,51 +46,47 @@ export default function ProductDetail({ productId }) {
       return;
     }
 
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user?.id) {
+      setReviewMessage("Please log in to submit a review.");
+      navigate("/login");
+      return;
+    }
+
     try {
-
-      const user = JSON.parse(localStorage.getItem("user"));
-
-      const response = await fetch(
-        `${API_URL}/api/reviews`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            product_id: id,
-            user_id: user.id,
-            rating: rating,
-            comment: comment
-          })
-        }
-      );
+      const response = await fetch(`${API_URL}/api/reviews/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product_id: Number(id),
+          user_id: user.id,
+          rating,
+          comment: comment.trim(),
+        }),
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setReviewMessage(data.message);
+        setReviewMessage(data.message || "Could not submit review.");
         return;
       }
 
       setReviewMessage("Review added successfully!");
-
       setRating(0);
       setComment("");
-
-      // Refresh reviews
+      setHasReviewed(true);
       fetchReviews();
-
     } catch (error) {
       console.error("Review error:", error);
-      setReviewMessage("Something went wrong.");
+      setReviewMessage("Something went wrong. Please try again.");
     }
   };
 
   useEffect(() => {
     if (id) {
       console.log("API URL:", import.meta.env.VITE_API_URL);
-      fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}/colors`)
+      fetch(`${API_URL}/api/products/${id}/colors`)
         .then(r => r.json())
         .then(setProductColors)
         .catch(err => console.log("colors error", err));
@@ -108,12 +104,18 @@ export default function ProductDetail({ productId }) {
 
   const fetchReviews = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/reviews/${id}`
-      );
+      const res = await axios.get(`${API_URL}/api/reviews/${id}`);
 
       if (res.data.success) {
         setReviews(res.data.reviews);
+
+        const currentUser = JSON.parse(localStorage.getItem("user"));
+        if (currentUser?.id) {
+          const alreadyReviewed = res.data.reviews.some(
+            (r) => String(r.user_id) === String(currentUser.id)
+          );
+          setHasReviewed(alreadyReviewed);
+        }
       }
     } catch (err) {
       console.error(err);
@@ -152,7 +154,7 @@ export default function ProductDetail({ productId }) {
 
     try {
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cart`, {
+      const response = await fetch(`${API_URL}/api/cart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -186,11 +188,9 @@ export default function ProductDetail({ productId }) {
 
 
 
-  const baseUrl = "https://my-shop-q1uu.onrender.com";
-
   const getProductDetail = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
+      const response = await fetch(`${API_URL}/api/products/${id}`);
       const data = await response.json();
       setProductDetail(data);
     } catch (err) {
@@ -345,15 +345,21 @@ export default function ProductDetail({ productId }) {
                 </button>
 
               </div>
-              ```jsx
-              {reviewRequested && (
-                <div className="border rounded p-4 mb-4">
-
+              {reviewRequested && !hasReviewed && (
+                <div className="border rounded p-4 mb-4 bg-light">
                   <h4>Write a Review</h4>
+
+                  {reviewMessage && (
+                    <div
+                      className={`alert ${reviewMessage.includes("successfully") ? "alert-success" : "alert-warning"} py-2`}
+                      role="alert"
+                    >
+                      {reviewMessage}
+                    </div>
+                  )}
 
                   <div className="mb-3">
                     <label className="form-label">Rating</label>
-
                     <select
                       className="form-select"
                       value={rating}
@@ -370,7 +376,6 @@ export default function ProductDetail({ productId }) {
 
                   <div className="mb-3">
                     <label className="form-label">Your Review</label>
-
                     <textarea
                       className="form-control"
                       rows="4"
@@ -381,15 +386,20 @@ export default function ProductDetail({ productId }) {
                   </div>
 
                   <button
+                    type="button"
                     className="btn btn-primary"
                     onClick={handleSubmitReview}
                   >
                     Submit Review
                   </button>
-
                 </div>
               )}
-              ```
+
+              {reviewRequested && hasReviewed && (
+                <div className="alert alert-success mb-4">
+                  You have already reviewed this product. Thank you!
+                </div>
+              )}
 
 
               {/* here start reviews section for view only  */}

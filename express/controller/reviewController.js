@@ -81,6 +81,7 @@ export const getProductReviews = async (req, res) => {
         const [reviews] = await db.query(
             `SELECT
                 r.id,
+                r.user_id,
                 r.rating,
                 r.comment,
                 r.created_at,

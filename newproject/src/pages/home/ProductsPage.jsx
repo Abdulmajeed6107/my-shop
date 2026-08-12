@@ -7,6 +7,8 @@ import BootomPage from '../../components/BootomPage';
 import './Products.css';
 import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
+import { useNavigationProgress } from '../../components/NavigationProgress';
+import { API_URL } from '../../config/api';
 
 
 function ProductsPage() {
@@ -23,6 +25,7 @@ function ProductsPage() {
   const categoryParam = searchParams.get("category") || "All";
   const seasonParam = searchParams.get("season") || "";
   const navigate = useNavigate();
+  const { completeNavigation } = useNavigationProgress();
 
   const navigateToDetailPage = (id) => {
     navigate('/product/productDetail/' + id);
@@ -32,7 +35,7 @@ function ProductsPage() {
     setisLoading(true);
     try {
       const catQuery = categoryParam === 'All' ? '' : categoryParam;
-      const url = `${import.meta.env.VITE_API_URL}/api/products?page=${page}&limit=${limit}&category=${catQuery}&search=${search}&season=${seasonParam}`;
+      const url = `${API_URL}/api/products?page=${page}&limit=${limit}&category=${catQuery}&search=${search}&season=${seasonParam}`;
       const response = await fetch(url);
       if (!response.ok) throw new Error('Api fetch error');
       const data = await response.json();
@@ -69,6 +72,12 @@ function ProductsPage() {
     getItems();
   }, [page, limit, search, categoryParam, seasonParam]);
 
+  useEffect(() => {
+    if (!isLoading) {
+      completeNavigation();
+    }
+  }, [isLoading, completeNavigation]);
+
   const handlePageChange = (newPage) => {
     setPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -83,8 +92,8 @@ function ProductsPage() {
       <MyNavbar />
 
       {isLoading ? (
-        <div className='d-flex justify-content-center align-items-center vh-100'>
-          <div className="spinner-border" role="status">
+        <div className="d-flex justify-content-center align-items-center py-5" style={{ minHeight: "50vh" }}>
+          <div className="spinner-border text-teal" style={{ color: "#20b2aa" }} role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>

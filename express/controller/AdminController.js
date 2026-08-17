@@ -65,6 +65,8 @@ VALUES(?,?,?,?,?,?)
 
 export const AddProduct = async (req, res) => {
 
+     console.log("🔥🔥🔥 AddProduct function was called 🔥🔥🔥");
+    console.log("req.file:", req.file);
     console.log("req.body:", req.body);
     console.log("Category:", req.body.category);
 
@@ -85,18 +87,21 @@ export const AddProduct = async (req, res) => {
     try {
 
         // Step 1: Remove background
+        console.log("Input path:", inputPath);
+
+        console.log("Starting background removal...");
         const blob = await removeBackground(inputPath);
         const buffer = Buffer.from(await blob.arrayBuffer());
         fs.writeFileSync(outputPath, buffer);
 
-         // Step 2: Upload cleaned image to Cloudinary
+        // Step 2: Upload cleaned image to Cloudinary
         const result = await cloudinary.uploader.upload(outputPath, {
             folder: 'products'
         });
 
         // Step 3: Clean up local temp files
-        fs.unlinkSync(inputPath);
-        fs.unlinkSync(outputPath);
+        // fs.unlinkSync(inputPath);
+        // fs.unlinkSync(outputPath);
 
         const image = result.secure_url;
 

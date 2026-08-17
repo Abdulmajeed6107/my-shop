@@ -2,7 +2,6 @@ import db from "../config/db.js";
 import { removeBackground } from '@imgly/background-removal-node';
 import fs from 'fs';
 import cloudinary from '../config/cloudinary.js';
-import bcrypt from 'bcrypt';
 
 const adminSignup = async (req, res) => {
 

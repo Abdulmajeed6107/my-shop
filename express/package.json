@@ -17,6 +17,7 @@
     "nodemon": "^3.1.14"
   },
   "dependencies": {
+    "@imgly/background-removal-node": "^1.4.5",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^1.41.3",
     "cors": "^2.8.6",

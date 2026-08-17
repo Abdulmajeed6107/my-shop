@@ -1,4 +1,8 @@
 import db from "../config/db.js";
+import { removeBackground } from '@imgly/background-removal-node';
+import fs from 'fs';
+import cloudinary from '../config/cloudinary.js';
+import bcrypt from 'bcrypt';
 
 const adminSignup = async (req, res) => {
 
@@ -56,6 +60,9 @@ VALUES(?,?,?,?,?,?)
 
 
 }
+
+// add product is from here
+
 export const AddProduct = async (req, res) => {
 
     console.log("req.body:", req.body);
@@ -72,7 +79,26 @@ export const AddProduct = async (req, res) => {
         return res.status(400).json({ status: false, message: 'Image is required' });
     }
 
+    const inputPath = req.file.path;
+    const outputPath = `${inputPath}-processed.png`;
+
     try {
+
+        // Step 1: Remove background
+        const blob = await removeBackground(inputPath);
+        const buffer = Buffer.from(await blob.arrayBuffer());
+        fs.writeFileSync(outputPath, buffer);
+
+         // Step 2: Upload cleaned image to Cloudinary
+        const result = await cloudinary.uploader.upload(outputPath, {
+            folder: 'products'
+        });
+
+        // Step 3: Clean up local temp files
+        fs.unlinkSync(inputPath);
+        fs.unlinkSync(outputPath);
+
+        const image = result.secure_url;
 
         const newproduct = await db.query(
             "INSERT INTO `products` (name, price, description, sku, image, category ) VALUES (?, ?, ?, ?,?,?)",

@@ -39,12 +39,20 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      'https://my-shop-tawny-three.vercel.app/',
-      "https://bhatticlothing.store",
-    ],
+    origin: (origin, callback) => {
+      const allowed = [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://my-shop-tawny-three.vercel.app",
+        "https://bhatticlothing.store",
+        "https://my-shop-ad.vercel.app",
+      ];
+      if (!origin || allowed.includes(origin) || origin.endsWith(".vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST"],
     credentials: true
   }

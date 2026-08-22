@@ -26,20 +26,36 @@ app.use(express.json());
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map(origin => origin.trim())
   : [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "https://bhatticlothing.store",
-    "https://my-shop-ad.vercel.app"
-  ];
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://bhatticlothing.store",
+      "https://www.bhatticlothing.store",
+      "https://my-shop-tawny-three.vercel.app",
+      "https://my-shop-ad.vercel.app"
+    ];
 
 console.log("Allowed origins:", allowedOrigins);
 
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      console.log("Request origin:", origin);
 
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.log("❌ CORS blocked:", origin);
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+  })
+);
 const server = http.createServer(app);
 
 const io = new Server(server, {

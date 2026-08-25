@@ -1,5 +1,5 @@
 import db from "../config/db.js";
-import { removeBackground } from '@imgly/background-removal-node';
+// import { removeBackground } from '@imgly/background-removal-node';
 import fs from 'fs';
 import cloudinary from '../config/cloudinary.js';
 import path from "path";
@@ -142,7 +142,7 @@ export const AddProduct = async (req, res) => {
         console.log("Uploading processed image...");
 
         const result = await cloudinary.uploader.upload(
-            outputPath,
+            inputPath,
             {
                 folder: "products"
             }

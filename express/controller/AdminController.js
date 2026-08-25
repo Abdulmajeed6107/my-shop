@@ -121,11 +121,11 @@ export const AddProduct = async (req, res) => {
         // STEP 2: Remove background
         // ------------------------------------------------
 
-        console.log("Starting background removal...");
+        // console.log("Starting background removal...");
 
-        const blob = await removeBackground(inputPath);
+        // const blob = await removeBackground(inputPath);
 
-        console.log("✅ Background removed successfully");
+        // console.log("✅ Background removed successfully");
 
         const processedBuffer = Buffer.from(
             await blob.arrayBuffer()

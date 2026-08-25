@@ -24,7 +24,7 @@ import MyOrderRoutes from './routes/MyOrderRoutes.js'
 app.use(express.json());
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map(origin => origin.trim())
+  ? process.env.ALLOWED_ORIGINS.split(",").map(origin => origin.trim()).filter(Boolean)
   : [
       "http://localhost:5173",
       "http://localhost:5174",

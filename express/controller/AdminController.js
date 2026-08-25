@@ -184,11 +184,7 @@ export const AddProduct = async (req, res) => {
                 fs.unlinkSync(inputPath);
             }
 
-            if (fs.existsSync(outputPath)) {
-                fs.unlinkSync(outputPath);
-            }
-
-            console.log("✅ Temporary files deleted");
+            console.log("✅ Temporary file deleted");
         } catch (cleanupError) {
             console.log(
                 "⚠️ Temporary file cleanup failed:",

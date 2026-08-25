@@ -127,11 +127,11 @@ export const AddProduct = async (req, res) => {
 
         // console.log("✅ Background removed successfully");
 
-        const processedBuffer = Buffer.from(
-            await blob.arrayBuffer()
-        );
+        // const processedBuffer = Buffer.from(
+        //     await blob.arrayBuffer()
+        // );
 
-        fs.writeFileSync(outputPath, processedBuffer);
+        // fs.writeFileSync(outputPath, processedBuffer);
 
         console.log("✅ Processed image saved:", outputPath);
 

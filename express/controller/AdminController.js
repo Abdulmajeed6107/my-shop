@@ -108,10 +108,10 @@ export const AddProduct = async (req, res) => {
             `product-${Date.now()}.jpg`
         );
 
-        const outputPath = path.join(
-            tempDir,
-            `product-${Date.now()}-processed.png`
-        );
+        // const outputPath = path.join(
+        //     tempDir,
+        //     `product-${Date.now()}-processed.png`
+        // );
 
         fs.writeFileSync(inputPath, imageBuffer);
 
@@ -133,7 +133,7 @@ export const AddProduct = async (req, res) => {
 
         // fs.writeFileSync(outputPath, processedBuffer);
 
-        console.log("✅ Processed image saved:", outputPath);
+        console.log("✅ Processed image saved:", inputPath);
 
         // ------------------------------------------------
         // STEP 3: Upload processed image to Cloudinary

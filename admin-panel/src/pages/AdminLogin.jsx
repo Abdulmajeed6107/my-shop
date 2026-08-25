@@ -59,8 +59,8 @@ export default function AdminLogin() {
 
             <div className="container">
                 <div className="row d-flex justify-content-center">
-                    <div className="col-8 justify-content-center mt-3">
-                        <div className="card p-4 w-75"  >
+                    <div className="col-lg-8 col-md-6 col-sm-12 justify-content-center mt-5">
+                        <div className="card p-4"  >
 
                             <h1 className="text-center mb-3">Admin Sign In</h1>
                             {/* from starts from here  */}

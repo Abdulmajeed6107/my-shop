@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const ResetPassword = async (req, res) => {
+export const ResetPassword = async (req, res) => {
     
     const { token } = req.params;
     const { password } = req.body;
@@ -23,4 +23,3 @@ const ResetPassword = async (req, res) => {
 
     res.json({ message: 'Password updated successfully.' });
 }
-module.exports = { ResetPassword };

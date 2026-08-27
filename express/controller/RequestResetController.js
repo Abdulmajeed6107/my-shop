@@ -1,7 +1,7 @@
-const crypto = require('crypto');
-const nodemailer = require('nodemailer');
+import crypto from 'node:crypto';
+import nodemailer from 'nodemailer';
 
-const ForgotPassword = async (req, res) => {
+export const ForgotPassword = async (req, res) => {
     const { email } = req.body;
     const [rows] = await db.query('SELECT id FROM users WHERE email = ? AND delete_at IS NULL', [email]);
     if (rows.length === 0) {
@@ -32,4 +32,3 @@ const ForgotPassword = async (req, res) => {
 
     res.json({ message: 'If that email exists, a reset link has been sent.' });
 }
-module.exports = { ForgotPassword };

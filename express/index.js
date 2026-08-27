@@ -137,7 +137,6 @@ app.use("/api/mail", testEmailRoutes);
 
 app.use("/api/user", ForgotPasswordRoutes);
 
-app.use("/api/user", ForgotPasswordRoutes);
 app.use("/api/user", ResetPasswordRoutes);
 
 

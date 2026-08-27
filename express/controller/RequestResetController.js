@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import nodemailer from 'nodemailer';
+import db from '../config/db.js';
 
 export const ForgotPassword = async (req, res) => {
     const { email } = req.body;

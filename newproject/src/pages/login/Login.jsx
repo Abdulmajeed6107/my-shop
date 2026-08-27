@@ -104,7 +104,9 @@ export default function Login() {
                                     <input type="checkbox" />
                                     <span>Remember me</span>
                                 </label>
-                                <button type="button" className="auth-link-btn">Forgot Password?</button>
+                                <button type="button" className="auth-link-btn" onClick={()=>navigate("/forgot-password")}>
+                                    Forgot Password?
+                                </button>
                             </div>
 
                             <button className="auth-submit-btn" type="submit">Login</button>

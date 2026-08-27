@@ -1,4 +1,6 @@
-const bcrypt = require('bcrypt');
+
+import bycrypt from 'bcrypt';
+import db from '../config/db.js';
 
 export const ResetPassword = async (req, res) => {
     

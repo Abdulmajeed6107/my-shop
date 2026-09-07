@@ -11,7 +11,7 @@ export const ForgotPassword = async (req, res) => {
 
     const token = crypto.randomBytes(32).toString('hex');
     const expiry = Date.now() + 3600000; // 1 hour
-
+N
     await db.query(
         'UPDATE users SET resetToken = ?, resetTokenExpiry = ? WHERE email = ?',
         [token, expiry, email]

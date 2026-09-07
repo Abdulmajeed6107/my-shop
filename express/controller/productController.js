@@ -42,7 +42,7 @@ export const GetAllProducts = async (req, res) => {
         );
       } else if (season.toLowerCase() === "winter") {
         whereConditions.push(
-          "(category LIKE '%winter%' OR name LIKE '%khaddar%' OR name LIKE '%wool%' OR name LIKE '%velvet%' OR name LIKE '%karandi%' OR name LIKE '%winter%' OR description LIKE '%khaddar%' OR description LIKE '%wool%' OR description LIKE '%velvet%')"
+          "(category LIKE '%winter%' OR name LIKE '%khaddar%' OR name LIKE '%linen%' OR name LIKE '%wool%' OR name LIKE '%velvet%' OR name LIKE '%karandi%' OR name LIKE '%winter%' OR description LIKE '%khaddar%' OR description LIKE '%wool%' OR description LIKE '%velvet%')"
         );
       }
     }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import { removeBackground } from '@imgly/background-removal';
 
 const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Scarf", "Suit", "Women", "Men", "Children"]; // adjust as needed
 
@@ -20,6 +21,8 @@ function AddProductPage() {
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [isRemovingBg, setIsRemovingBg] = useState(false);
+  const [bgRemoved, setBgRemoved] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -30,8 +33,29 @@ function AddProductPage() {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setImage(file);
-    setPreview(URL.createObjectURL(file)); // show preview
+    if (file) {
+      setImage(file);
+      setPreview(URL.createObjectURL(file)); // show preview
+      setBgRemoved(false);
+    }
+  };
+
+  const handleRemoveBackground = async () => {
+    if (!image) return;
+    try {
+      setIsRemovingBg(true);
+      setError(null);
+      const blob = await removeBackground(image);
+      const cleanedFile = new File([blob], `cleaned-${image.name.replace(/\.[^/.]+$/, "")}.png`, { type: 'image/png' });
+      setImage(cleanedFile);
+      setPreview(URL.createObjectURL(cleanedFile));
+      setBgRemoved(true);
+    } catch (err) {
+      console.error("Client BG removal error:", err);
+      setError("Failed to remove background automatically. You can still submit the product.");
+    } finally {
+      setIsRemovingBg(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -107,11 +131,38 @@ function AddProductPage() {
             />
             {preview && (
               <div className="mt-3 text-center bg-light p-3 rounded">
-                <img
-                  src={preview}
-                  alt="Preview"
-                  style={{ maxHeight: '200px', objectFit: 'contain' }}
-                />
+                <div className="mb-2">
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    style={{
+                      maxHeight: '200px',
+                      objectFit: 'contain',
+                      background: bgRemoved ? 'repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 16px 16px' : 'transparent'
+                    }}
+                  />
+                </div>
+                {!bgRemoved ? (
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm mt-2"
+                    onClick={handleRemoveBackground}
+                    disabled={isRemovingBg}
+                  >
+                    {isRemovingBg ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" />
+                        Removing Background (AI)...
+                      </>
+                    ) : (
+                      '✨ Remove Background (AI Clean)'
+                    )}
+                  </button>
+                ) : (
+                  <span className="badge bg-success mt-2 p-2">
+                    ✅ Background Cleaned (Transparent PNG)
+                  </span>
+                )}
               </div>
             )}
           </div>

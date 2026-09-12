@@ -3,7 +3,6 @@ import fs from 'fs';
 import cloudinary from '../config/cloudinary.js';
 import path from "path";
 import os from "os";
-import { removeBackgroundAndUpload } from "../utils/bgRemover.js";
 
 const adminSignup = async (req, res) => {
 
@@ -81,8 +80,7 @@ export const AddProduct = async (req, res) => {
     }
 
     try {
-        console.log("Original upload URL:", req.file.path);
-        const cleanedImage = await removeBackgroundAndUpload(req.file.path);
+        const imageUrl = req.file.path;
 
         const [newproduct] = await db.query(
             `INSERT INTO products
@@ -93,7 +91,7 @@ export const AddProduct = async (req, res) => {
                 price,
                 description,
                 sku,
-                cleanedImage,
+                imageUrl,
                 category,
                 productSeason
             ]
@@ -104,7 +102,7 @@ export const AddProduct = async (req, res) => {
         return res.status(201).json({
             status: true,
             message: "Item added to products successfully!",
-            image_url: cleanedImage
+            image_url: imageUrl
         });
 
     } catch (error) {

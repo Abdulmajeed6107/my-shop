@@ -1,5 +1,4 @@
 import db from "../config/db.js";
-import { removeBackgroundAndUpload } from "../utils/bgRemover.js";
 
 export const GetAllProducts = async (req, res) => {
   try {
@@ -221,10 +220,7 @@ export const UpdateProduct = async (req, res) => {
   const { name, price, description, sku, is_active, category, season } = req.body;
 
   try {
-    let image = null;
-    if (req.file) {
-      image = await removeBackgroundAndUpload(req.file.path);
-    }
+    const image = req.file ? req.file.path : null;
 
     const result = await db.query(
       "UPDATE products SET name=?, price=?, description=?, sku=?, image=COALESCE(?,image), is_active=COALESCE(?, is_active), category=COALESCE(?, category), season=COALESCE(?, season) WHERE id=?",

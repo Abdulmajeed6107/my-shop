@@ -6,6 +6,47 @@ import { removeBackground } from '@imgly/background-removal';
 
 const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Scarf", "Suit", "Women", "Men", "Children"]; // adjust as needed
 
+const processAutoBackground = async (file, bgColor = '#ffffff') => {
+  // 1. Extract subject with AI
+  const blob = await removeBackground(file);
+
+  // 2. Composite onto solid plain background canvas
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(blob);
+    img.src = url;
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+
+      // Fill solid plain background
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw clean cutout on top
+      ctx.drawImage(img, 0, 0);
+
+      URL.revokeObjectURL(url);
+
+      canvas.toBlob((finalBlob) => {
+        if (finalBlob) {
+          const cleanFile = new File([finalBlob], `clean-${file.name.replace(/\.[^/.]+$/, "")}.jpeg`, { type: 'image/jpeg' });
+          resolve({ file: cleanFile, previewUrl: URL.createObjectURL(finalBlob) });
+        } else {
+          reject(new Error("Canvas export failed"));
+        }
+      }, 'image/jpeg', 0.95);
+    };
+
+    img.onerror = (err) => {
+      URL.revokeObjectURL(url);
+      reject(err);
+    };
+  });
+};
 
 function AddProductPage() {
   const navigate = useNavigate();
@@ -21,8 +62,9 @@ function AddProductPage() {
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [isRemovingBg, setIsRemovingBg] = useState(false);
-  const [bgRemoved, setBgRemoved] = useState(false);
+  const [bgColor, setBgColor] = useState('#ffffff');
+  const [isProcessingImg, setIsProcessingImg] = useState(false);
+  const [bgCleaned, setBgCleaned] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -31,30 +73,28 @@ function AddProductPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      setPreview(URL.createObjectURL(file)); // show preview
-      setBgRemoved(false);
-    }
-  };
+    if (!file) return;
 
-  const handleRemoveBackground = async () => {
-    if (!image) return;
+    // Show initial preview immediately
+    setPreview(URL.createObjectURL(file));
+    setImage(file);
+    setIsProcessingImg(true);
+    setBgCleaned(false);
+    setError(null);
+
     try {
-      setIsRemovingBg(true);
-      setError(null);
-      const blob = await removeBackground(image);
-      const cleanedFile = new File([blob], `cleaned-${image.name.replace(/\.[^/.]+$/, "")}.png`, { type: 'image/png' });
-      setImage(cleanedFile);
-      setPreview(URL.createObjectURL(cleanedFile));
-      setBgRemoved(true);
+      console.log("✨ Auto-removing background & adding plain background...");
+      const { file: cleanFile, previewUrl } = await processAutoBackground(file, bgColor);
+      setImage(cleanFile);
+      setPreview(previewUrl);
+      setBgCleaned(true);
     } catch (err) {
-      console.error("Client BG removal error:", err);
-      setError("Failed to remove background automatically. You can still submit the product.");
+      console.error("Auto background processing failed:", err);
+      setError("Auto-background cleaning couldn't process this image format. Original image will be uploaded.");
     } finally {
-      setIsRemovingBg(false);
+      setIsProcessingImg(false);
     }
   };
 
@@ -127,41 +167,33 @@ function AddProductPage() {
               accept="image/*"
               className="form-control"
               onChange={handleImageChange}
+              disabled={isProcessingImg}
               required
             />
             {preview && (
               <div className="mt-3 text-center bg-light p-3 rounded">
-                <div className="mb-2">
+                <div className="mb-2 position-relative" style={{ minHeight: '150px' }}>
                   <img
                     src={preview}
                     alt="Preview"
                     style={{
-                      maxHeight: '200px',
+                      maxHeight: '220px',
                       objectFit: 'contain',
-                      background: bgRemoved ? 'repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 16px 16px' : 'transparent'
+                      borderRadius: '8px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                     }}
                   />
                 </div>
-                {!bgRemoved ? (
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary btn-sm mt-2"
-                    onClick={handleRemoveBackground}
-                    disabled={isRemovingBg}
-                  >
-                    {isRemovingBg ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" />
-                        Removing Background (AI)...
-                      </>
-                    ) : (
-                      '✨ Remove Background (AI Clean)'
-                    )}
-                  </button>
-                ) : (
-                  <span className="badge bg-success mt-2 p-2">
-                    ✅ Background Cleaned (Transparent PNG)
-                  </span>
+                {isProcessingImg && (
+                  <div className="alert alert-info py-2 my-2">
+                    <span className="spinner-border spinner-border-sm me-2" role="status" />
+                    ✨ AI is automatically removing background & creating plain background...
+                  </div>
+                )}
+                {bgCleaned && (
+                  <div className="badge bg-success p-2 mt-2">
+                    ✅ Background Automatically Removed & Plain Background Placed!
+                  </div>
                 )}
               </div>
             )}

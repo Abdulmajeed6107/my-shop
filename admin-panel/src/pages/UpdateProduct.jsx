@@ -11,6 +11,7 @@ const UpdateProduct = () => {
     const [sku, setSku] = useState("");
     const [category, setCategory] = useState("Uncategorized");
     const [season, setSeason] = useState("summer");
+    const [bgColor, setBgColor] = useState("f5f5f7");
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
     const [oldImage, setOldImage] = useState("");
@@ -69,6 +70,7 @@ const UpdateProduct = () => {
         formData.append("sku", sku);
         formData.append("category", category);
         formData.append("season", season);
+        formData.append("bg_color", bgColor);
         // only send image if user selected new one
         if (image) {
             formData.append("image", image);
@@ -154,6 +156,20 @@ const UpdateProduct = () => {
                 <option value="summer">Summer Collection</option>
                 <option value="winter">Winter Collection</option>
                 <option value="all">All Seasons</option>
+            </select>
+
+            <label className="fw-semibold mt-2">Photo Background Color</label>
+            <select
+                className="form-select mb-3"
+                value={bgColor}
+                onChange={(e) => setBgColor(e.target.value)}
+            >
+                <option value="f5f5f7">🎨 Studio Soft Grey (#f5f5f7 - Default)</option>
+                <option value="faf9f6">🍨 Luxury Warm Cream (#faf9f6)</option>
+                <option value="e8f4f8">❄️ Light Ice Blue (#e8f4f8)</option>
+                <option value="fce4ec">🌸 Soft Blush Pink (#fce4ec)</option>
+                <option value="2c3e50">🖤 Dark Charcoal (#2c3e50)</option>
+                <option value="ffffff">⚪ Pure White (#ffffff)</option>
             </select>
 
             <label className="fw-semibold mt-2">Current / New Image</label>

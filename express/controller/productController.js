@@ -39,11 +39,11 @@ export const GetAllProducts = async (req, res) => {
       const sLower = season.toLowerCase();
       if (sLower === "summer") {
         whereConditions.push(
-          "(season = 'summer' OR season = 'all' OR category LIKE '%summer%' OR name LIKE '%lawn%' OR name LIKE '%cotton%' OR name LIKE '%summer%' OR name LIKE '%doria%' OR description LIKE '%lawn%' OR description LIKE '%cotton%')"
+          "(season = 'summer' OR season = 'all' OR ((season IS NULL OR season = '') AND (category LIKE '%summer%' OR name LIKE '%lawn%' OR name LIKE '%cotton%' OR name LIKE '%summer%' OR name LIKE '%doria%' OR description LIKE '%lawn%' OR description LIKE '%cotton%')))"
         );
       } else if (sLower === "winter") {
         whereConditions.push(
-          "(season = 'winter' OR season = 'all' OR category LIKE '%winter%' OR name LIKE '%khaddar%' OR name LIKE '%linen%' OR name LIKE '%wool%' OR name LIKE '%velvet%' OR name LIKE '%karandi%' OR name LIKE '%winter%' OR description LIKE '%khaddar%' OR description LIKE '%wool%' OR description LIKE '%velvet%')"
+          "(season = 'winter' OR season = 'all' OR ((season IS NULL OR season = '') AND (category LIKE '%winter%' OR name LIKE '%khaddar%' OR name LIKE '%linen%' OR name LIKE '%wool%' OR name LIKE '%velvet%' OR name LIKE '%karandi%' OR name LIKE '%winter%' OR description LIKE '%khaddar%' OR description LIKE '%wool%' OR description LIKE '%velvet%')))"
         );
       }
     }

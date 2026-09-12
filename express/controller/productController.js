@@ -36,13 +36,14 @@ export const GetAllProducts = async (req, res) => {
 
     // Season filter
     if (season) {
-      if (season.toLowerCase() === "summer") {
+      const sLower = season.toLowerCase();
+      if (sLower === "summer") {
         whereConditions.push(
-          "(category LIKE '%summer%' OR name LIKE '%lawn%' OR name LIKE '%cotton%' OR name LIKE '%summer%' OR name LIKE '%doria%' OR description LIKE '%lawn%' OR description LIKE '%cotton%')"
+          "(season = 'summer' OR season = 'all' OR category LIKE '%summer%' OR name LIKE '%lawn%' OR name LIKE '%cotton%' OR name LIKE '%summer%' OR name LIKE '%doria%' OR description LIKE '%lawn%' OR description LIKE '%cotton%')"
         );
-      } else if (season.toLowerCase() === "winter") {
+      } else if (sLower === "winter") {
         whereConditions.push(
-          "(category LIKE '%winter%' OR name LIKE '%khaddar%' OR name LIKE '%linen%' OR name LIKE '%wool%' OR name LIKE '%velvet%' OR name LIKE '%karandi%' OR name LIKE '%winter%' OR description LIKE '%khaddar%' OR description LIKE '%wool%' OR description LIKE '%velvet%')"
+          "(season = 'winter' OR season = 'all' OR category LIKE '%winter%' OR name LIKE '%khaddar%' OR name LIKE '%linen%' OR name LIKE '%wool%' OR name LIKE '%velvet%' OR name LIKE '%karandi%' OR name LIKE '%winter%' OR description LIKE '%khaddar%' OR description LIKE '%wool%' OR description LIKE '%velvet%')"
         );
       }
     }
@@ -217,7 +218,7 @@ export const UpdateProduct = async (req, res) => {
   console.log("BODY:", req.body);
   console.log("FILE:", req.file);
 
-  const { name, price, description, sku, is_active, category } = req.body;
+  const { name, price, description, sku, is_active, category, season } = req.body;
 
   const image = req.file
     ? req.file.path
@@ -226,8 +227,8 @@ export const UpdateProduct = async (req, res) => {
   try {
 
     const result = await db.query(
-      "UPDATE products SET name=?, price=?, description=?, sku=?, image=COALESCE(?,image), is_active=COALESCE(?, is_active),  category=COALESCE(?, category) WHERE id=?",
-      [name, price, description, sku, image, is_active ?? 1, category ?? 'Uncategorized', productId,]
+      "UPDATE products SET name=?, price=?, description=?, sku=?, image=COALESCE(?,image), is_active=COALESCE(?, is_active), category=COALESCE(?, category), season=COALESCE(?, season) WHERE id=?",
+      [name, price, description, sku, image, is_active ?? 1, category ?? 'Uncategorized', season ?? 'summer', productId,]
     );
 
     return res.json({

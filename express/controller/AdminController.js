@@ -70,7 +70,8 @@ export const AddProduct = async (req, res) => {
     console.log("req.file:", req.file);
     console.log("req.body:", req.body);
 
-    const { name, price, description, sku, category } = req.body;
+    const { name, price, description, sku, category, season } = req.body;
+    const productSeason = season || "summer";
 
     if (!req.file) {
         return res.status(400).json({
@@ -161,15 +162,16 @@ export const AddProduct = async (req, res) => {
 
         const [newproduct] = await db.query(
             `INSERT INTO products
-            (name, price, description, sku, image, category)
-            VALUES (?, ?, ?, ?, ?, ?)`,
+            (name, price, description, sku, image, category, season)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
             [
                 name,
                 price,
                 description,
                 sku,
                 cleanedImage,
-                category
+                category,
+                productSeason
             ]
         );
 

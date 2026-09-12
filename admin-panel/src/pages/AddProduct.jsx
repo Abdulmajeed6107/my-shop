@@ -14,7 +14,8 @@ function AddProductPage() {
     price: '',
     description: '',
     sku: '',
-    category: ''
+    category: 'Uncategorized',
+    season: 'summer'
   });
 
   const [image, setImage] = useState(null);
@@ -50,12 +51,13 @@ function AddProductPage() {
     data.append('sku', formData.sku);
     data.append('image', image); // must match multer field name
     data.append('category', formData.category);
+    data.append('season', formData.season);
 
 
     try {
       setIsLoading(true);
 
-      console.log("Category:", formData.category);
+      console.log("Category:", formData.category, "Season:", formData.season);
 
       for (let pair of data.entries()) {
         console.log(pair[0], pair[1]);
@@ -121,7 +123,7 @@ function AddProductPage() {
               type="text"
               name="name"
               className="form-control"
-              placeholder="e.g. Tomatoes"
+              placeholder="e.g. Winter Lawn Suit"
               value={formData.name}
               onChange={handleChange}
               required
@@ -183,6 +185,21 @@ function AddProductPage() {
                   {cat}
                 </option>
               ))}
+            </select>
+          </div>
+
+          {/* Season */}
+          <div className="mb-4">
+            <label className="form-label fw-semibold">Collection / Season</label>
+            <select
+              name="season"
+              className="form-select"
+              value={formData.season}
+              onChange={handleChange}
+            >
+              <option value="summer">Summer Collection</option>
+              <option value="winter">Winter Collection</option>
+              <option value="all">All Seasons</option>
             </select>
           </div>
 

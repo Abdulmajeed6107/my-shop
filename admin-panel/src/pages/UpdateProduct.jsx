@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-const CATEGORIES = ["Uncategorized", "Dupatta", "Stoller", "Scarf"]; // adjust as needed
+const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Scarf", "Suit", "Women", "Men", "Children"]; // adjust as needed
 
 const UpdateProduct = () => {
 
@@ -12,6 +12,7 @@ const UpdateProduct = () => {
     const [description, setDescription] = useState("");
     const [sku, setSku] = useState("");
     const [category, setCategory] = useState("Uncategorized");
+    const [season, setSeason] = useState("summer");
     const [image, setImage] = useState(null);
     const [oldImage, setOldImage] = useState("");
     const { id } = useParams();
@@ -40,6 +41,7 @@ const UpdateProduct = () => {
                 setDescription(data.product.description || "");
                 setSku(data.product.sku || "");
                 setCategory(data.product.category || "Uncategorized");
+                setSeason(data.product.season || "summer");
                 setOldImage(data.product.image || "");
             } catch (e) {
                 console.log("error fetching product", e)
@@ -59,6 +61,7 @@ const UpdateProduct = () => {
         formData.append("description", description);
         formData.append("sku", sku);
         formData.append("category", category);
+        formData.append("season", season);
         // only send image if user selected new one
         if (image) {
             formData.append("image", image);
@@ -119,6 +122,7 @@ const UpdateProduct = () => {
 
             />
 
+            <label className="fw-semibold mt-2">Category</label>
             <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -128,6 +132,16 @@ const UpdateProduct = () => {
                         {cat}
                     </option>
                 ))}
+            </select>
+
+            <label className="fw-semibold mt-2">Collection / Season</label>
+            <select
+                value={season}
+                onChange={(e) => setSeason(e.target.value)}
+            >
+                <option value="summer">Summer Collection</option>
+                <option value="winter">Winter Collection</option>
+                <option value="all">All Seasons</option>
             </select>
 
             {

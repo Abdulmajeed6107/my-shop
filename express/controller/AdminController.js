@@ -70,7 +70,7 @@ export const AddProduct = async (req, res) => {
     console.log("req.file:", req.file);
     console.log("req.body:", req.body);
 
-    const { name, price, description, sku, category, season } = req.body;
+    const { name, price, description, sku, category, season, bg_color } = req.body;
     const productSeason = season || "summer";
 
     if (!req.file) {
@@ -82,7 +82,7 @@ export const AddProduct = async (req, res) => {
 
     try {
         const rawImageUrl = req.file.path;
-        const imageUrl = await removeBgStudioQuality(rawImageUrl);
+        const imageUrl = await removeBgStudioQuality(rawImageUrl, bg_color || "f5f5f7");
 
         const [newproduct] = await db.query(
             `INSERT INTO products

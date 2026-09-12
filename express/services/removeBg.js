@@ -1,10 +1,9 @@
 import cloudinary from '../config/cloudinary.js';
 
 /**
- * High quality background removal using remove.bg API (if API key is present)
- * or Cloudinary transformation fallback.
+ * High quality background removal using remove.bg API with customizable background color
  */
-export const removeBgStudioQuality = async (imageUrl) => {
+export const removeBgStudioQuality = async (imageUrl, bgColor = "f5f5f7") => {
     const apiKey = process.env.REMOVE_BG_API_KEY;
 
     if (!apiKey) {
@@ -13,7 +12,9 @@ export const removeBgStudioQuality = async (imageUrl) => {
     }
 
     try {
-        console.log("✂️ Requesting studio-quality background removal from remove.bg...");
+        const formattedBgColor = bgColor ? bgColor.replace("#", "") : "f5f5f7";
+        console.log(`✂️ Requesting studio-quality background removal with color #${formattedBgColor}...`);
+
         const response = await fetch("https://api.remove.bg/v1.0/removebg", {
             method: "POST",
             headers: {
@@ -23,7 +24,7 @@ export const removeBgStudioQuality = async (imageUrl) => {
             body: JSON.stringify({
                 image_url: imageUrl,
                 size: "auto",
-                bg_color: "white", // Solid plain white background
+                bg_color: formattedBgColor,
             }),
         });
 

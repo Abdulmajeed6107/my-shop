@@ -218,12 +218,12 @@ export const UpdateProduct = async (req, res) => {
   console.log("BODY:", req.body);
   console.log("FILE:", req.file);
 
-  const { name, price, description, sku, is_active, category, season } = req.body;
+  const { name, price, description, sku, is_active, category, season, bg_color } = req.body;
 
   try {
     let image = null;
     if (req.file) {
-      image = await removeBgStudioQuality(req.file.path);
+      image = await removeBgStudioQuality(req.file.path, bg_color || "f5f5f7");
     }
 
     const result = await db.query(

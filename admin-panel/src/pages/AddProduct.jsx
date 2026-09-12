@@ -14,7 +14,8 @@ function AddProductPage() {
     description: '',
     sku: '',
     category: 'Uncategorized',
-    season: 'summer'
+    season: 'summer',
+    bg_color: 'f5f5f7'
   });
 
   const [image, setImage] = useState(null);
@@ -53,6 +54,7 @@ function AddProductPage() {
     data.append('image', image); // must match multer field name
     data.append('category', formData.category);
     data.append('season', formData.season);
+    data.append('bg_color', formData.bg_color);
 
 
     try {
@@ -206,6 +208,24 @@ function AddProductPage() {
               <option value="summer">Summer Collection</option>
               <option value="winter">Winter Collection</option>
               <option value="all">All Seasons</option>
+            </select>
+          </div>
+
+          {/* Background Color */}
+          <div className="mb-4">
+            <label className="form-label fw-semibold">Photo Background Color</label>
+            <select
+              name="bg_color"
+              className="form-select"
+              value={formData.bg_color}
+              onChange={handleChange}
+            >
+              <option value="f5f5f7">🎨 Studio Soft Grey (#f5f5f7 - Default)</option>
+              <option value="faf9f6">🍨 Luxury Warm Cream (#faf9f6)</option>
+              <option value="e8f4f8">❄️ Light Ice Blue (#e8f4f8)</option>
+              <option value="fce4ec">🌸 Soft Blush Pink (#fce4ec)</option>
+              <option value="2c3e50">🖤 Dark Charcoal (#2c3e50)</option>
+              <option value="ffffff">⚪ Pure White (#ffffff)</option>
             </select>
           </div>
 

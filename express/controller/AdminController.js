@@ -1,9 +1,9 @@
 import db from "../config/db.js";
-// import { removeBackground } from '@imgly/background-removal-node';
 import fs from 'fs';
 import cloudinary from '../config/cloudinary.js';
 import path from "path";
 import os from "os";
+import { removeBackgroundAndUpload } from "../utils/bgRemover.js";
 
 const adminSignup = async (req, res) => {
 
@@ -80,85 +80,9 @@ export const AddProduct = async (req, res) => {
         });
     }
 
-    const cloudinaryUrl = req.file.path;
-
     try {
-        console.log("Cloudinary image:", cloudinaryUrl);
-
-        // ------------------------------------------------
-        // STEP 1: Download Cloudinary image
-        // ------------------------------------------------
-
-        console.log("Downloading image...");
-
-        const response = await fetch(cloudinaryUrl);
-
-        if (!response.ok) {
-            throw new Error(
-                `Failed to download image: ${response.status} ${response.statusText}`
-            );
-        }
-
-        const imageBuffer = Buffer.from(await response.arrayBuffer());
-
-        // Temporary directory
-        const tempDir = os.tmpdir();
-
-        const inputPath = path.join(
-            tempDir,
-            `product-${Date.now()}.jpg`
-        );
-
-        // const outputPath = path.join(
-        //     tempDir,
-        //     `product-${Date.now()}-processed.png`
-        // );
-
-        fs.writeFileSync(inputPath, imageBuffer);
-
-        console.log("✅ Image downloaded:", inputPath);
-
-        // ------------------------------------------------
-        // STEP 2: Remove background
-        // ------------------------------------------------
-
-        // console.log("Starting background removal...");
-
-        // const blob = await removeBackground(inputPath);
-
-        // console.log("✅ Background removed successfully");
-
-        // const processedBuffer = Buffer.from(
-        //     await blob.arrayBuffer()
-        // );
-
-        // fs.writeFileSync(outputPath, processedBuffer);
-
-        console.log("✅ Processed image saved:", inputPath);
-
-        // ------------------------------------------------
-        // STEP 3: Upload processed image to Cloudinary
-        // ------------------------------------------------
-
-        console.log("Uploading processed image...");
-
-        const result = await cloudinary.uploader.upload(
-            inputPath,
-            {
-                folder: "products"
-            }
-        );
-
-        console.log(
-            "✅ Processed image uploaded:",
-            result.secure_url
-        );
-
-        const cleanedImage = result.secure_url;
-
-        // ------------------------------------------------
-        // STEP 4: Insert product into database
-        // ------------------------------------------------
+        console.log("Original upload URL:", req.file.path);
+        const cleanedImage = await removeBackgroundAndUpload(req.file.path);
 
         const [newproduct] = await db.query(
             `INSERT INTO products
@@ -177,27 +101,6 @@ export const AddProduct = async (req, res) => {
 
         console.log("✅ Product inserted into database");
 
-        // ------------------------------------------------
-        // STEP 5: Delete temporary files
-        // ------------------------------------------------
-
-        try {
-            if (fs.existsSync(inputPath)) {
-                fs.unlinkSync(inputPath);
-            }
-
-            console.log("✅ Temporary file deleted");
-        } catch (cleanupError) {
-            console.log(
-                "⚠️ Temporary file cleanup failed:",
-                cleanupError.message
-            );
-        }
-
-        // ------------------------------------------------
-        // SUCCESS
-        // ------------------------------------------------
-
         return res.status(201).json({
             status: true,
             message: "Item added to products successfully!",
@@ -205,13 +108,10 @@ export const AddProduct = async (req, res) => {
         });
 
     } catch (error) {
-
         console.error("❌ AddProduct Error:", error);
-
         return res.status(500).json({
             status: false,
-            message: "Failed to add product",
-            error: error.message
+            message: error.message || "Failed to add product"
         });
     }
 };

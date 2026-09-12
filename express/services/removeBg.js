@@ -1,9 +1,9 @@
 import cloudinary from '../config/cloudinary.js';
 
 /**
- * High quality background removal using remove.bg API with customizable background color
+ * Studio-quality background removal with Warm Cream background (#faf9f6)
  */
-export const removeBgStudioQuality = async (imageUrl, bgColor = "f5f5f7") => {
+export const removeBgStudioQuality = async (imageUrl, bgColor = "faf9f6") => {
     const apiKey = process.env.REMOVE_BG_API_KEY;
 
     if (!apiKey) {
@@ -12,8 +12,12 @@ export const removeBgStudioQuality = async (imageUrl, bgColor = "f5f5f7") => {
     }
 
     try {
-        const formattedBgColor = bgColor ? bgColor.replace("#", "") : "f5f5f7";
-        console.log(`✂️ Requesting studio-quality background removal with color #${formattedBgColor}...`);
+        let cleanBgColor = bgColor ? bgColor.replace("#", "") : "faf9f6";
+        if (cleanBgColor.toLowerCase() === "warmcream" || cleanBgColor.toLowerCase() === "cream") {
+            cleanBgColor = "faf9f6";
+        }
+
+        console.log(`✂️ Requesting studio background removal with Warm Cream background (#${cleanBgColor})...`);
 
         const response = await fetch("https://api.remove.bg/v1.0/removebg", {
             method: "POST",
@@ -24,7 +28,7 @@ export const removeBgStudioQuality = async (imageUrl, bgColor = "f5f5f7") => {
             body: JSON.stringify({
                 image_url: imageUrl,
                 size: "auto",
-                bg_color: formattedBgColor,
+                bg_color: cleanBgColor,
             }),
         });
 
@@ -36,7 +40,7 @@ export const removeBgStudioQuality = async (imageUrl, bgColor = "f5f5f7") => {
         const buffer = Buffer.from(await response.arrayBuffer());
         const base64Image = `data:image/jpeg;base64,${buffer.toString("base64")}`;
 
-        console.log("☁️ Uploading studio-clean image to Cloudinary...");
+        console.log("☁️ Uploading studio Warm Cream photo to Cloudinary...");
         const uploadResult = await cloudinary.uploader.upload(base64Image, {
             folder: "products",
         });

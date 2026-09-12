@@ -82,7 +82,7 @@ export const AddProduct = async (req, res) => {
 
     try {
         const rawImageUrl = req.file.path;
-        const imageUrl = await removeBgStudioQuality(rawImageUrl, bg_color || "f5f5f7");
+        const imageUrl = await removeBgStudioQuality(rawImageUrl, bg_color || "faf9f6");
 
         const [newproduct] = await db.query(
             `INSERT INTO products

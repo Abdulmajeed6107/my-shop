@@ -11,7 +11,7 @@ const UpdateProduct = () => {
     const [sku, setSku] = useState("");
     const [category, setCategory] = useState("Uncategorized");
     const [season, setSeason] = useState("summer");
-    const [bgColor, setBgColor] = useState("f5f5f7");
+    const [bgColor, setBgColor] = useState("faf9f6");
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
     const [oldImage, setOldImage] = useState("");
@@ -164,8 +164,8 @@ const UpdateProduct = () => {
                 value={bgColor}
                 onChange={(e) => setBgColor(e.target.value)}
             >
-                <option value="f5f5f7">🎨 Studio Soft Grey (#f5f5f7 - Default)</option>
-                <option value="faf9f6">🍨 Luxury Warm Cream (#faf9f6)</option>
+                <option value="faf9f6">🍨 Luxury Warm Cream (#faf9f6 - Default)</option>
+                <option value="f5f5f7">🎨 Studio Soft Grey (#f5f5f7)</option>
                 <option value="e8f4f8">❄️ Light Ice Blue (#e8f4f8)</option>
                 <option value="fce4ec">🌸 Soft Blush Pink (#fce4ec)</option>
                 <option value="2c3e50">🖤 Dark Charcoal (#2c3e50)</option>

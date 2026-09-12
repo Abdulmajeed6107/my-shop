@@ -223,7 +223,7 @@ export const UpdateProduct = async (req, res) => {
   try {
     let image = null;
     if (req.file) {
-      image = await removeBgStudioQuality(req.file.path, bg_color || "f5f5f7");
+      image = await removeBgStudioQuality(req.file.path, bg_color || "faf9f6");
     }
 
     const result = await db.query(

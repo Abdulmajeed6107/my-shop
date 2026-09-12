@@ -15,7 +15,7 @@ function AddProductPage() {
     sku: '',
     category: 'Uncategorized',
     season: 'summer',
-    bg_color: 'f5f5f7'
+    bg_color: 'faf9f6'
   });
 
   const [image, setImage] = useState(null);
@@ -220,8 +220,8 @@ function AddProductPage() {
               value={formData.bg_color}
               onChange={handleChange}
             >
-              <option value="f5f5f7">🎨 Studio Soft Grey (#f5f5f7 - Default)</option>
-              <option value="faf9f6">🍨 Luxury Warm Cream (#faf9f6)</option>
+              <option value="faf9f6">🍨 Luxury Warm Cream (#faf9f6 - Default)</option>
+              <option value="f5f5f7">🎨 Studio Soft Grey (#f5f5f7)</option>
               <option value="e8f4f8">❄️ Light Ice Blue (#e8f4f8)</option>
               <option value="fce4ec">🌸 Soft Blush Pink (#fce4ec)</option>
               <option value="2c3e50">🖤 Dark Charcoal (#2c3e50)</option>

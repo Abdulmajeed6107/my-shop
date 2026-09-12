@@ -1,45 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { removeBackground } from "@imgly/background-removal";
 
 const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Scarf", "Suit", "Women", "Men", "Children"]; // adjust as needed
-
-const processAutoBackground = async (file, bgColor = '#ffffff') => {
-    const blob = await removeBackground(file);
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        const url = URL.createObjectURL(blob);
-        img.src = url;
-
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-
-            ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.drawImage(img, 0, 0);
-
-            URL.revokeObjectURL(url);
-
-            canvas.toBlob((finalBlob) => {
-                if (finalBlob) {
-                    const cleanFile = new File([finalBlob], `clean-${file.name.replace(/\.[^/.]+$/, "")}.jpeg`, { type: 'image/jpeg' });
-                    resolve({ file: cleanFile, previewUrl: URL.createObjectURL(finalBlob) });
-                } else {
-                    reject(new Error("Canvas export failed"));
-                }
-            }, 'image/jpeg', 0.95);
-        };
-
-        img.onerror = (err) => {
-            URL.revokeObjectURL(url);
-            reject(err);
-        };
-    });
-};
 
 const UpdateProduct = () => {
 
@@ -52,8 +14,6 @@ const UpdateProduct = () => {
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
     const [oldImage, setOldImage] = useState("");
-    const [isProcessingImg, setIsProcessingImg] = useState(false);
-    const [bgCleaned, setBgCleaned] = useState(false);
     const { id } = useParams();
     console.log("PARAM ID:", id);
 
@@ -91,25 +51,11 @@ const UpdateProduct = () => {
     }, [id]
     );
 
-    const handleImageChange = async (e) => {
+    const handleImageChange = (e) => {
         const file = e.target.files[0];
-        if (!file) return;
-
-        setPreview(URL.createObjectURL(file));
-        setImage(file);
-        setIsProcessingImg(true);
-        setBgCleaned(false);
-
-        try {
-            console.log("✨ Auto-cleaning background for update...");
-            const { file: cleanFile, previewUrl } = await processAutoBackground(file);
-            setImage(cleanFile);
-            setPreview(previewUrl);
-            setBgCleaned(true);
-        } catch (err) {
-            console.error("Auto background removal error:", err);
-        } finally {
-            setIsProcessingImg(false);
+        if (file) {
+            setImage(file);
+            setPreview(URL.createObjectURL(file));
         }
     };
 
@@ -223,17 +169,6 @@ const UpdateProduct = () => {
                             boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                         }}
                     />
-                    {isProcessingImg && (
-                        <div className="alert alert-info py-2 my-2">
-                            <span className="spinner-border spinner-border-sm me-2" role="status" />
-                            ✨ AI is automatically removing background & creating plain background...
-                        </div>
-                    )}
-                    {bgCleaned && (
-                        <div className="badge bg-success p-2 mt-2">
-                            ✅ Background Automatically Removed & Plain Background Placed!
-                        </div>
-                    )}
                 </div>
             )}
 
@@ -242,11 +177,10 @@ const UpdateProduct = () => {
                 className="form-control mb-4"
                 accept="image/*"
                 onChange={handleImageChange}
-                disabled={isProcessingImg}
             />
 
 
-            <button className="btn btn-success" onClick={updateProduct} disabled={isProcessingImg}>
+            <button className="btn btn-success" onClick={updateProduct}>
                 Update Product
             </button>
 

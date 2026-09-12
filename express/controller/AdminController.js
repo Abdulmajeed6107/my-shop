@@ -3,6 +3,7 @@ import fs from 'fs';
 import cloudinary from '../config/cloudinary.js';
 import path from "path";
 import os from "os";
+import { removeBgStudioQuality } from "../services/removeBg.js";
 
 const adminSignup = async (req, res) => {
 
@@ -80,7 +81,8 @@ export const AddProduct = async (req, res) => {
     }
 
     try {
-        const imageUrl = req.file.path;
+        const rawImageUrl = req.file.path;
+        const imageUrl = await removeBgStudioQuality(rawImageUrl);
 
         const [newproduct] = await db.query(
             `INSERT INTO products

@@ -24,17 +24,23 @@ async function uploadStudioImage(buffer) {
 async function removeBgWithRemoveBgApi(imageUrl, bgColorHex, apiKey) {
     console.log(`✂️ remove.bg studio background (#${bgColorHex})...`);
 
+    const imageRes = await fetch(imageUrl);
+    if (!imageRes.ok) {
+        throw new Error(`Could not fetch uploaded image (${imageRes.status})`);
+    }
+    const imageBytes = Buffer.from(await imageRes.arrayBuffer());
+
+    const form = new FormData();
+    form.append('image_file', new Blob([imageBytes]), 'product.jpg');
+    form.append('size', 'auto');
+    form.append('bg_color', bgColorHex);
+
     const response = await fetch('https://api.remove.bg/v1.0/removebg', {
         method: 'POST',
         headers: {
             'X-Api-Key': apiKey,
-            'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            image_url: imageUrl,
-            size: 'auto',
-            bg_color: bgColorHex,
-        }),
+        body: form,
     });
 
     if (!response.ok) {
@@ -47,33 +53,35 @@ async function removeBgWithRemoveBgApi(imageUrl, bgColorHex, apiKey) {
 }
 
 /**
- * Server-side studio background (remove.bg only — no local ML; safe for 512MB hosts).
- * Skip entirely when the admin panel already sent a processed image (image_preprocessed=true).
+ * Studio background via remove.bg (lightweight — safe on 512MB hosts).
+ * When REMOVE_BG_API_KEY is set, always runs on every product upload.
  */
 export const removeBgStudioQuality = async (imageUrl, bgColor = DEFAULT_CREAM, options = {}) => {
+    const cleanBgColor = normalizeBgColor(bgColor);
+    const apiKey = process.env.REMOVE_BG_API_KEY;
+
+    if (apiKey) {
+        try {
+            const url = await removeBgWithRemoveBgApi(imageUrl, cleanBgColor, apiKey);
+            console.log('🎉 remove.bg studio image ready:', url);
+            return url;
+        } catch (error) {
+            console.error('⚠️ remove.bg failed:', error.message);
+            if (options.skip) {
+                console.log('Using admin pre-processed upload after remove.bg failure.');
+                return imageUrl;
+            }
+        }
+    }
+
     if (options.skip) {
         return imageUrl;
     }
 
-    const cleanBgColor = normalizeBgColor(bgColor);
-    const apiKey = process.env.REMOVE_BG_API_KEY;
-
-    if (!apiKey) {
-        console.log(
-            'ℹ️ No REMOVE_BG_API_KEY and image not pre-processed — saving upload as-is. ' +
-                'Process photos in the admin panel before upload, or set REMOVE_BG_API_KEY.'
-        );
-        return imageUrl;
-    }
-
-    try {
-        const url = await removeBgWithRemoveBgApi(imageUrl, cleanBgColor, apiKey);
-        console.log('🎉 remove.bg studio image ready:', url);
-        return url;
-    } catch (error) {
-        console.error('⚠️ remove.bg failed:', error.message);
-        return imageUrl;
-    }
+    console.warn(
+        '⚠️ Image saved without background removal. Set REMOVE_BG_API_KEY on the API (Render env vars).'
+    );
+    return imageUrl;
 };
 
 export function isImagePreprocessed(body) {

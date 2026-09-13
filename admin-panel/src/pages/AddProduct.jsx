@@ -21,6 +21,7 @@ function AddProductPage() {
 
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [studioPreview, setStudioPreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [processPercent, setProcessPercent] = useState(0);
   const [error, setError] = useState(null);
@@ -34,7 +35,8 @@ function AddProductPage() {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
-      setPreview(URL.createObjectURL(file)); // show preview
+      setStudioPreview(null);
+      setPreview(URL.createObjectURL(file));
     }
   };
 
@@ -57,8 +59,9 @@ function AddProductPage() {
         uploadFile = await applyStudioBackground(image, formData.bg_color, (pct) => {
           setProcessPercent(pct);
         });
-        if (preview) URL.revokeObjectURL(preview);
-        setPreview(URL.createObjectURL(uploadFile));
+        const studioUrl = URL.createObjectURL(uploadFile);
+        if (studioPreview) URL.revokeObjectURL(studioPreview);
+        setStudioPreview(studioUrl);
       } catch (processErr) {
         console.error(processErr);
         throw new Error(
@@ -121,24 +124,38 @@ function AddProductPage() {
               onChange={handleImageChange}
               required
             />
-            {preview && (
-              <div
-                className="mt-3 text-center p-3 rounded"
-                style={{ backgroundColor: `#${formData.bg_color}` }}
-              >
+            {preview && !studioPreview && (
+              <div className="mt-3 text-center p-3 rounded bg-light">
+                <p className="small fw-semibold mb-2">Original (before processing)</p>
                 <img
                   src={preview}
-                  alt="Preview"
+                  alt="Original preview"
+                  style={{
+                    maxHeight: '200px',
+                    objectFit: 'contain',
+                    borderRadius: '8px',
+                  }}
+                />
+              </div>
+            )}
+            {studioPreview && (
+              <div
+                className="mt-3 text-center p-3 rounded border border-success"
+                style={{ backgroundColor: `#${formData.bg_color}` }}
+              >
+                <p className="small fw-semibold text-success mb-2">
+                  Studio preview — this is what will be uploaded
+                </p>
+                <img
+                  src={studioPreview}
+                  alt="Studio preview"
                   style={{
                     maxHeight: '220px',
                     objectFit: 'contain',
                     borderRadius: '8px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                   }}
                 />
-                <p className="small text-muted mb-0 mt-2">
-                  Background is removed in your browser, then saved with this studio color (keeps the server light).
-                </p>
               </div>
             )}
           </div>

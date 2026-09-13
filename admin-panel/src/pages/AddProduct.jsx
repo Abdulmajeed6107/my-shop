@@ -109,7 +109,10 @@ function AddProductPage() {
               required
             />
             {preview && (
-              <div className="mt-3 text-center bg-light p-3 rounded">
+              <div
+                className="mt-3 text-center p-3 rounded"
+                style={{ backgroundColor: `#${formData.bg_color}` }}
+              >
                 <img
                   src={preview}
                   alt="Preview"
@@ -120,6 +123,9 @@ function AddProductPage() {
                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                   }}
                 />
+                <p className="small text-muted mb-0 mt-2">
+                  After upload, the background is removed and replaced with this studio color.
+                </p>
               </div>
             )}
           </div>
@@ -237,7 +243,7 @@ function AddProductPage() {
             {isLoading ? (
               <>
                 <span className="spinner-border spinner-border-sm me-2" role="status" />
-                Adding Product...
+                Removing background & applying studio color…
               </>
             ) : 'Add Product'}
           </button>

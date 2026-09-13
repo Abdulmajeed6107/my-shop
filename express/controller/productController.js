@@ -1,5 +1,5 @@
 import db from "../config/db.js";
-import { removeBgStudioQuality } from "../services/removeBg.js";
+import { removeBgStudioQuality, isImagePreprocessed } from "../services/removeBg.js";
 
 export const GetAllProducts = async (req, res) => {
   try {
@@ -223,7 +223,10 @@ export const UpdateProduct = async (req, res) => {
   try {
     let image = null;
     if (req.file) {
-      image = await removeBgStudioQuality(req.file.path, bg_color || "faf9f6");
+      const preprocessed = isImagePreprocessed(req.body);
+      image = await removeBgStudioQuality(req.file.path, bg_color || "faf9f6", {
+        skip: preprocessed,
+      });
     }
 
     const result = await db.query(

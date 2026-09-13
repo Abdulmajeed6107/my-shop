@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
+import { applyStudioBackground } from '../utils/processProductImage';
 
 const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Scarf", "Suit", "Women", "Men", "Children"]; // adjust as needed
 
@@ -21,6 +22,7 @@ function AddProductPage() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [processPercent, setProcessPercent] = useState(0);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -46,25 +48,36 @@ function AddProductPage() {
       return;
     }
 
-    const data = new FormData();
-    data.append('name', formData.name);
-    data.append('price', formData.price);
-    data.append('description', formData.description);
-    data.append('sku', formData.sku);
-    data.append('image', image); // must match multer field name
-    data.append('category', formData.category);
-    data.append('season', formData.season);
-    data.append('bg_color', formData.bg_color);
-
-
     try {
       setIsLoading(true);
+      setProcessPercent(0);
 
-      console.log("Category:", formData.category, "Season:", formData.season);
-
-      for (let pair of data.entries()) {
-        console.log(pair[0], pair[1]);
+      let uploadFile = image;
+      try {
+        uploadFile = await applyStudioBackground(image, formData.bg_color, (pct) => {
+          setProcessPercent(pct);
+        });
+        if (preview) URL.revokeObjectURL(preview);
+        setPreview(URL.createObjectURL(uploadFile));
+      } catch (processErr) {
+        console.error(processErr);
+        throw new Error(
+          processErr.message ||
+            'Could not remove background in browser. Try a smaller photo or refresh and try again.'
+        );
       }
+
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('price', formData.price);
+      data.append('description', formData.description);
+      data.append('sku', formData.sku);
+      data.append('image', uploadFile);
+      data.append('category', formData.category);
+      data.append('season', formData.season);
+      data.append('bg_color', formData.bg_color);
+      data.append('image_preprocessed', 'true');
+
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/add-product`, {
         method: 'POST',
         body: data, // don't set Content-Type header, browser sets it with boundary
@@ -124,7 +137,7 @@ function AddProductPage() {
                   }}
                 />
                 <p className="small text-muted mb-0 mt-2">
-                  After upload, the background is removed and replaced with this studio color.
+                  Background is removed in your browser, then saved with this studio color (keeps the server light).
                 </p>
               </div>
             )}
@@ -243,7 +256,11 @@ function AddProductPage() {
             {isLoading ? (
               <>
                 <span className="spinner-border spinner-border-sm me-2" role="status" />
-                Removing background & applying studio color…
+                {processPercent > 0 && processPercent < 100
+                  ? `Processing photo… ${processPercent}%`
+                  : processPercent >= 100
+                    ? 'Uploading…'
+                    : 'Preparing…'}
               </>
             ) : 'Add Product'}
           </button>

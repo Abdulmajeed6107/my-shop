@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { applyStudioBackground } from "../utils/processProductImage";
 
 const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Scarf", "Suit", "Women", "Men", "Children"]; // adjust as needed
 
@@ -15,6 +16,9 @@ const UpdateProduct = () => {
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
     const [oldImage, setOldImage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [processPercent, setProcessPercent] = useState(0);
+    const [error, setError] = useState(null);
     const { id } = useParams();
     console.log("PARAM ID:", id);
 
@@ -61,42 +65,65 @@ const UpdateProduct = () => {
     };
 
     const updateProduct = async () => {
+        setError(null);
+        setIsLoading(true);
+        setProcessPercent(0);
 
-        const formData = new FormData();
+        try {
+            const formData = new FormData();
 
-        formData.append("name", name);
-        formData.append("price", price);
-        formData.append("description", description);
-        formData.append("sku", sku);
-        formData.append("category", category);
-        formData.append("season", season);
-        formData.append("bg_color", bgColor);
-        // only send image if user selected new one
-        if (image) {
-            formData.append("image", image);
-        }
+            formData.append("name", name);
+            formData.append("price", price);
+            formData.append("description", description);
+            formData.append("sku", sku);
+            formData.append("category", category);
+            formData.append("season", season);
+            formData.append("bg_color", bgColor);
 
-        const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/api/products/${id}`,
-            {
-                method: "PUT",
-                body: formData,
-
+            if (image) {
+                let uploadFile = image;
+                try {
+                    uploadFile = await applyStudioBackground(image, bgColor, (pct) => {
+                        setProcessPercent(pct);
+                    });
+                } catch (processErr) {
+                    console.error(processErr);
+                    throw new Error(
+                        processErr.message ||
+                            "Could not process image in browser. Try a smaller photo."
+                    );
+                }
+                formData.append("image", uploadFile);
+                formData.append("image_preprocessed", "true");
             }
-        );
 
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+                {
+                    method: "PUT",
+                    body: formData,
+                }
+            );
 
-        const data = await response.json();
+            const data = await response.json();
+            if (data.status === false) {
+                throw new Error(data.message || "Update failed");
+            }
 
-        console.log(data);
-        navigate('/products');
-    }
+            navigate("/products");
+        } catch (e) {
+            setError(e.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 
 
     return (
         <div className="d-flex flex-column p-5" style={{ maxWidth: '600px', margin: '0 auto' }}>
             <h1 className="mb-3">Update product</h1>
+            {error && <div className="alert alert-danger">{error}</div>}
             <input
                 type="text"
                 className="form-control mb-3"
@@ -196,8 +223,12 @@ const UpdateProduct = () => {
             />
 
 
-            <button className="btn btn-success" onClick={updateProduct}>
-                Update Product
+            <button className="btn btn-success" onClick={updateProduct} disabled={isLoading}>
+                {isLoading
+                    ? processPercent > 0 && processPercent < 100
+                        ? `Processing photo… ${processPercent}%`
+                        : "Saving…"
+                    : "Update Product"}
             </button>
 
         </div>

@@ -6,13 +6,13 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "my-shop", // all uploads go into this folder on Cloudinary
-    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    allowed_formats: ["jpg", "jpeg", "png", "webp", "heic", "heif"],
   },
 });
 
 // Only allow image files
 const fileFilter = (req, file, cb) => {
-  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+  const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
   if (allowed.includes(file.mimetype)) {
     cb(null, true);
   } else {

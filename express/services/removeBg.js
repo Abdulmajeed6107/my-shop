@@ -78,10 +78,9 @@ export const removeBgStudioQuality = async (imageUrl, bgColor = DEFAULT_CREAM, o
         return imageUrl;
     }
 
-    console.warn(
-        '⚠️ Image saved without background removal. Set REMOVE_BG_API_KEY on the API (Render env vars).'
+    throw new Error(
+        'Background removal is unavailable. Set REMOVE_BG_API_KEY on the API server and try again.'
     );
-    return imageUrl;
 };
 
 export function isImagePreprocessed(body) {

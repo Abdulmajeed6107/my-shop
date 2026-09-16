@@ -55,19 +55,18 @@ function AddProductPage() {
       setProcessPercent(0);
 
       let uploadFile = image;
+      let imagePreprocessed = false;
       try {
         uploadFile = await applyStudioBackground(image, formData.bg_color, (pct) => {
           setProcessPercent(pct);
         });
+        imagePreprocessed = true;
         const studioUrl = URL.createObjectURL(uploadFile);
         if (studioPreview) URL.revokeObjectURL(studioPreview);
         setStudioPreview(studioUrl);
       } catch (processErr) {
         console.error(processErr);
-        throw new Error(
-          processErr.message ||
-            'Could not remove background in browser. Try a smaller photo or refresh and try again.'
-        );
+        setProcessPercent(0);
       }
 
       const data = new FormData();
@@ -79,17 +78,23 @@ function AddProductPage() {
       data.append('category', formData.category);
       data.append('season', formData.season);
       data.append('bg_color', formData.bg_color);
-      data.append('image_preprocessed', 'true');
+      data.append('image_preprocessed', String(imagePreprocessed));
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/add-product`, {
         method: 'POST',
         body: data, // don't set Content-Type header, browser sets it with boundary
       });
 
-      const result = await response.json();
+      const responseText = await response.text();
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        throw new Error(`Upload failed (${response.status}). Please try a JPG or PNG image.`);
+      }
 
-      if (!result.status) {
-        throw new Error(result.message);
+      if (!response.ok || !result.status) {
+        throw new Error(result.message || `Upload failed (${response.status})`);
       }
 
       setSuccess('Product added successfully!');

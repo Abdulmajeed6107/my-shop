@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
-import { applyStudioBackground } from '../utils/processProductImage';
 
 const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Scarf", "Suit", "Women", "Men", "Children"]; // adjust as needed
 
@@ -16,7 +15,7 @@ function AddProductPage() {
     sku: '',
     category: 'Uncategorized',
     season: 'summer',
-    bg_color: 'faf9f6'
+    bg_color: 'ffffff'
   });
 
   const [image, setImage] = useState(null);
@@ -54,20 +53,7 @@ function AddProductPage() {
       setIsLoading(true);
       setProcessPercent(0);
 
-      let uploadFile = image;
-      let imagePreprocessed = false;
-      try {
-        uploadFile = await applyStudioBackground(image, formData.bg_color, (pct) => {
-          setProcessPercent(pct);
-        });
-        imagePreprocessed = true;
-        const studioUrl = URL.createObjectURL(uploadFile);
-        if (studioPreview) URL.revokeObjectURL(studioPreview);
-        setStudioPreview(studioUrl);
-      } catch (processErr) {
-        console.error(processErr);
-        setProcessPercent(0);
-      }
+      const uploadFile = image;
 
       const data = new FormData();
       data.append('name', formData.name);
@@ -78,7 +64,7 @@ function AddProductPage() {
       data.append('category', formData.category);
       data.append('season', formData.season);
       data.append('bg_color', formData.bg_color);
-      data.append('image_preprocessed', String(imagePreprocessed));
+      data.append('image_preprocessed', 'false');
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products/add-product`, {
         method: 'POST',
@@ -261,12 +247,11 @@ function AddProductPage() {
               value={formData.bg_color}
               onChange={handleChange}
             >
-              <option value="faf9f6">🍨 Luxury Warm Cream (#faf9f6 - Default)</option>
+              <option value="ffffff">White (#ffffff - Default)</option>
               <option value="f5f5f7">🎨 Studio Soft Grey (#f5f5f7)</option>
               <option value="e8f4f8">❄️ Light Ice Blue (#e8f4f8)</option>
               <option value="fce4ec">🌸 Soft Blush Pink (#fce4ec)</option>
               <option value="2c3e50">🖤 Dark Charcoal (#2c3e50)</option>
-              <option value="ffffff">⚪ Pure White (#ffffff)</option>
             </select>
           </div>
 

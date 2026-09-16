@@ -83,7 +83,7 @@ export const AddProduct = async (req, res) => {
     try {
         const rawImageUrl = req.file.path;
         const preprocessed = isImagePreprocessed(req.body);
-        const imageUrl = await removeBgStudioQuality(rawImageUrl, bg_color || "faf9f6", {
+        const imageUrl = await removeBgStudioQuality(rawImageUrl, bg_color || "ffffff", {
             skip: preprocessed,
         });
 

@@ -224,7 +224,7 @@ export const UpdateProduct = async (req, res) => {
     let image = null;
     if (req.file) {
       const preprocessed = isImagePreprocessed(req.body);
-      image = await removeBgStudioQuality(req.file.path, bg_color || "faf9f6", {
+      image = await removeBgStudioQuality(req.file.path, bg_color || "ffffff", {
         skip: preprocessed,
       });
     }

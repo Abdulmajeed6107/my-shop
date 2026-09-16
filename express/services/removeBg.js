@@ -1,14 +1,14 @@
 import cloudinary from '../config/cloudinary.js';
 
-const DEFAULT_CREAM = 'faf9f6';
+const DEFAULT_WHITE = 'ffffff';
 
 function normalizeBgColor(bgColor) {
-    let clean = (bgColor || DEFAULT_CREAM).replace('#', '').trim();
+    let clean = (bgColor || DEFAULT_WHITE).replace('#', '').trim();
     if (['warmcream', 'cream'].includes(clean.toLowerCase())) {
-        clean = DEFAULT_CREAM;
+        clean = DEFAULT_WHITE;
     }
     if (!/^[0-9a-fA-F]{6}$/.test(clean)) {
-        clean = DEFAULT_CREAM;
+        clean = DEFAULT_WHITE;
     }
     return clean.toLowerCase();
 }
@@ -60,7 +60,7 @@ async function removeBgWithRemoveBgApi(imageUrl, bgColorHex, apiKey) {
  * Studio background via remove.bg (lightweight — safe on 512MB hosts).
  * When REMOVE_BG_API_KEY is set, always runs on every product upload.
  */
-export const removeBgStudioQuality = async (imageUrl, bgColor = DEFAULT_CREAM, options = {}) => {
+export const removeBgStudioQuality = async (imageUrl, bgColor = DEFAULT_WHITE, options = {}) => {
     const cleanBgColor = normalizeBgColor(bgColor);
     const apiKey = process.env.REMOVE_BG_API_KEY?.trim();
     let processingError;

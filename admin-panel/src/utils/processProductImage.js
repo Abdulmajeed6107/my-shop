@@ -18,8 +18,8 @@ function loadImageFromBlob(blob) {
 }
 
 function normalizeHex(bgColor) {
-  const clean = (bgColor || 'faf9f6').replace('#', '').trim();
-  return /^[0-9a-fA-F]{6}$/.test(clean) ? clean : 'faf9f6';
+  const clean = (bgColor || 'ffffff').replace('#', '').trim();
+  return /^[0-9a-fA-F]{6}$/.test(clean) ? clean : 'ffffff';
 }
 
 async function resizeForProcessing(file, maxSide = 1400) {

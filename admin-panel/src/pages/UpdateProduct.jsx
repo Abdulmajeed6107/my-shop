@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { applyStudioBackground } from "../utils/processProductImage";
 
 const CATEGORIES = ["Uncategorized", "Dupattas", "Stoller", "Scarf", "Suit", "Women", "Men", "Children"]; // adjust as needed
 
@@ -12,7 +11,7 @@ const UpdateProduct = () => {
     const [sku, setSku] = useState("");
     const [category, setCategory] = useState("Uncategorized");
     const [season, setSeason] = useState("summer");
-    const [bgColor, setBgColor] = useState("faf9f6");
+    const [bgColor, setBgColor] = useState("ffffff");
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
     const [oldImage, setOldImage] = useState("");
@@ -81,20 +80,8 @@ const UpdateProduct = () => {
             formData.append("bg_color", bgColor);
 
             if (image) {
-                let uploadFile = image;
-                try {
-                    uploadFile = await applyStudioBackground(image, bgColor, (pct) => {
-                        setProcessPercent(pct);
-                    });
-                } catch (processErr) {
-                    console.error(processErr);
-                    throw new Error(
-                        processErr.message ||
-                            "Could not process image in browser. Try a smaller photo."
-                    );
-                }
-                formData.append("image", uploadFile);
-                formData.append("image_preprocessed", "true");
+                formData.append("image", image);
+                formData.append("image_preprocessed", "false");
             }
 
             const response = await fetch(
@@ -191,7 +178,7 @@ const UpdateProduct = () => {
                 value={bgColor}
                 onChange={(e) => setBgColor(e.target.value)}
             >
-                <option value="faf9f6">🍨 Luxury Warm Cream (#faf9f6 - Default)</option>
+                    <option value="ffffff">White (#ffffff - Default)</option>
                 <option value="f5f5f7">🎨 Studio Soft Grey (#f5f5f7)</option>
                 <option value="e8f4f8">❄️ Light Ice Blue (#e8f4f8)</option>
                 <option value="fce4ec">🌸 Soft Blush Pink (#fce4ec)</option>

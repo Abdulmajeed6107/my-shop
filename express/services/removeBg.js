@@ -13,8 +13,8 @@ function normalizeBgColor(bgColor) {
     return clean.toLowerCase();
 }
 
-async function uploadStudioImage(buffer) {
-    const base64Image = `data:image/jpeg;base64,${buffer.toString('base64')}`;
+async function uploadStudioImage(buffer, contentType = 'image/png') {
+    const base64Image = `data:${contentType};base64,${buffer.toString('base64')}`;
     const uploadResult = await cloudinary.uploader.upload(base64Image, {
         folder: 'products',
     });
@@ -24,7 +24,9 @@ async function uploadStudioImage(buffer) {
 async function removeBgWithRemoveBgApi(imageUrl, bgColorHex, apiKey) {
     console.log(`✂️ remove.bg studio background (#${bgColorHex})...`);
 
-    const imageRes = await fetch(imageUrl);
+    const imageRes = await fetch(imageUrl, {
+        signal: AbortSignal.timeout(60_000),
+    });
     if (!imageRes.ok) {
         throw new Error(`Could not fetch uploaded image (${imageRes.status})`);
     }
@@ -41,6 +43,7 @@ async function removeBgWithRemoveBgApi(imageUrl, bgColorHex, apiKey) {
             'X-Api-Key': apiKey,
         },
         body: form,
+        signal: AbortSignal.timeout(120_000),
     });
 
     if (!response.ok) {
@@ -49,7 +52,8 @@ async function removeBgWithRemoveBgApi(imageUrl, bgColorHex, apiKey) {
     }
 
     const buffer = Buffer.from(await response.arrayBuffer());
-    return uploadStudioImage(buffer);
+    const contentType = response.headers.get('content-type')?.split(';')[0] || 'image/png';
+    return uploadStudioImage(buffer, contentType);
 }
 
 /**
@@ -58,7 +62,8 @@ async function removeBgWithRemoveBgApi(imageUrl, bgColorHex, apiKey) {
  */
 export const removeBgStudioQuality = async (imageUrl, bgColor = DEFAULT_CREAM, options = {}) => {
     const cleanBgColor = normalizeBgColor(bgColor);
-    const apiKey = process.env.REMOVE_BG_API_KEY;
+    const apiKey = process.env.REMOVE_BG_API_KEY?.trim();
+    let processingError;
 
     if (apiKey) {
         try {
@@ -66,6 +71,7 @@ export const removeBgStudioQuality = async (imageUrl, bgColor = DEFAULT_CREAM, o
             console.log('🎉 remove.bg studio image ready:', url);
             return url;
         } catch (error) {
+            processingError = error;
             console.error('⚠️ remove.bg failed:', error.message);
             if (options.skip) {
                 console.log('Using admin pre-processed upload after remove.bg failure.');
@@ -78,7 +84,7 @@ export const removeBgStudioQuality = async (imageUrl, bgColor = DEFAULT_CREAM, o
         return imageUrl;
     }
 
-    throw new Error(
+    throw processingError || new Error(
         'Background removal is unavailable. Set REMOVE_BG_API_KEY on the API server and try again.'
     );
 };
